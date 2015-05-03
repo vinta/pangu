@@ -6,13 +6,6 @@ import (
 	"os"
 )
 
-func checkErr(err error) {
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
-}
-
 func ExampleTextSpacing() {
 	s := pangu.TextSpacing("所以,請問Jackey的鼻子有幾個?3.14個!")
 	fmt.Println(s)
