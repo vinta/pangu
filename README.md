@@ -1,6 +1,8 @@
 pangu.go
 ========
 
+[![Build Status](http://img.shields.io/travis/vinta/pangu.svg?style=flat-square)](https://travis-ci.org/vinta/pangu)
+
 Paranoid text spacing for good readability, to automatically insert whitespace between CJK (Chinese, Japanese, Korean) and half-width characters (alphabetical letters, numerical digits and symbols).
 
 * Go version: [pangu.go](https://github.com/vinta/pangu)
