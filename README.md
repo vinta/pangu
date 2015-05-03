@@ -27,7 +27,21 @@ $ go get -u github.com/vinta/pangu/pangu-axe
 
 ### Package
 
-TODO
+``` go
+package main
+
+import (
+    "fmt"
+    "github.com/vinta/pangu"
+)
+
+func main() {
+    s := pangu.TextSpacing("新八的構造成分有95%是眼鏡、3%是水、2%是垃圾")
+    fmt.Println(s)
+    // Output:
+    // 新八的構造成分有 95% 是眼鏡、3% 是水、2% 是垃圾
+}
+```
 
 ### Command-line Interface
 
@@ -41,4 +55,7 @@ your_file.pangu.txt
 
 ## Documentation
 
-TODO
+* `pangu` on [GoDoc](http://godoc.org/github.com/vinta/pangu)
+* `pangu-axe` on [GoDoc](http://godoc.org/github.com/vinta/pangu/pangu-axe)
+
+Have a question? Ask it on the [GitHub issues](https://github.com/vinta/pangu/issues)!
