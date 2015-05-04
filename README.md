@@ -10,6 +10,7 @@ Paranoid text spacing for good readability, to automatically insert whitespace b
 * JavaScript version: [pangu.js](https://github.com/vinta/paranoid-auto-spacing)
 * Node.js version: [pangu.node](https://github.com/huei90/pangu.node)
 * Python version: [pangu.py](https://github.com/vinta/pangu.py)
+* Ruby version: [pangu.rb](https://github.com/dlackty/pangu.rb)
 
 ## Installation
 
