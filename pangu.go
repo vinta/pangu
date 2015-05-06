@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"regexp"
 	"text/template"
@@ -119,33 +120,27 @@ func TextSpacing(input string) string {
 	return text
 }
 
-// FileSpacing performs a paranoid text spacing on path, and
-// generates a new file that contains processed content.
-// It returns the path to the new generated file.
-func FileSpacing(path string) (outPath string, err error) {
-	fin, err := os.Open(path)
+// FileSpacing reads the file named by filename, performs paranoid text
+// spacing on its contents and writes the processed content to w.
+// A successful call returns err == nil.
+func FileSpacing(filename string, w io.Writer) error {
+	fr, err := os.Open(filename)
 	if err != nil {
-		return "", err
+		return err
 	}
-	defer fin.Close()
+	defer fr.Close()
 
-	outPath = "test_file.pangu.txt"
-	fout, err := os.Create(outPath)
-	if err != nil {
-		return "", err
+	br := bufio.NewReader(fr)
+	bw := bufio.NewWriter(w)
+	line, err := br.ReadString('\n')
+	for err == nil {
+		fmt.Fprint(bw, line)
+		line, err = br.ReadString('\n')
 	}
-	defer fout.Close()
+	defer bw.Flush()
+	if err != io.EOF {
+		return err
+	}
 
-	scanner := bufio.NewScanner(fin)
-	writer := bufio.NewWriter(fout)
-	for scanner.Scan() {
-		line := TextSpacing(scanner.Text())
-		fmt.Fprintln(writer, line)
-	}
-	if err := scanner.Err(); err != nil {
-		return "", err
-	}
-	defer writer.Flush()
-
-	return outPath, nil
+	return nil
 }

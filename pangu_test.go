@@ -1,8 +1,10 @@
 package pangu_test
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/suite"
 	"github.com/vinta/pangu"
+	"os"
 	"testing"
 )
 
@@ -23,11 +25,17 @@ func (suite *PanguTestSuite) TestTextSpacing() {
 	suite.Equal(`所以, 請問 Jackey 的鼻子有幾個? 3.14 個!`, pangu.TextSpacing(`所以, 請問 Jackey 的鼻子有幾個? 3.14 個!`))
 }
 
-// TODO: compare file contents
 func (suite *PanguTestSuite) TestFileSpacing() {
-	inPath := "_fixtures/test_file.txt"
-	outPath, err := pangu.FileSpacing(inPath)
-	suite.NotNil(outPath)
+	input := "_fixtures/test_file.txt"
+	output := "_fixtures/test_file.pangu.txt"
+
+	fw, err := os.Create(output)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer fw.Close()
+
+	err = pangu.FileSpacing(input, fw)
 	suite.Nil(err)
 }
 

@@ -14,13 +14,14 @@ func ExampleTextSpacing() {
 }
 
 func ExampleFileSpacing() {
-	outPath, err := pangu.FileSpacing("_fixtures/test_file.txt")
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
+	input := "_fixtures/test_file.txt"
+	output := "_fixtures/test_file.pangu.txt"
 
-	fmt.Println(outPath)
-	// Output:
-	// test_file.pangu.txt
+	fw, err := os.Create(output)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer fw.Close()
+
+	pangu.FileSpacing(input, fw)
 }
