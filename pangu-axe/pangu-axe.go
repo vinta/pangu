@@ -47,13 +47,22 @@ func main() {
 					os.Exit(1)
 				}
 
-				path := c.Args().First()
-				outPath, err := pangu.FileSpacing(path)
+				filename := c.Args().First()
+
+				output := filename + ".pangu"
+				fw, err := os.Create(output)
 				if err != nil {
 					fmt.Println(err)
 					os.Exit(1)
 				}
-				fmt.Println(outPath)
+				defer fw.Close()
+
+				err = pangu.FileSpacing(filename, fw)
+				if err != nil {
+					fmt.Println(err)
+					os.Exit(1)
+				}
+				fmt.Println(output)
 			},
 		},
 	}
