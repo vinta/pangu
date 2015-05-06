@@ -12,6 +12,12 @@ type PanguTestSuite struct {
 	suite.Suite
 }
 
+func checkError(err error) {
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
 // func (suite *PanguTestSuite) assertEqualTextSpacing(expected, input string) {
 // 	actual := pangu.TextSpacing(input)
 // 	suite.Equal(expected, actual)
@@ -23,20 +29,6 @@ func (suite *PanguTestSuite) TestTextSpacing() {
 
 	suite.Equal(`所以, 請問 Jackey 的鼻子有幾個? 3.14 個!`, pangu.TextSpacing(`所以,請問Jackey的鼻子有幾個?3.14個!`))
 	suite.Equal(`所以, 請問 Jackey 的鼻子有幾個? 3.14 個!`, pangu.TextSpacing(`所以, 請問 Jackey 的鼻子有幾個? 3.14 個!`))
-}
-
-func (suite *PanguTestSuite) TestFileSpacing() {
-	input := "_fixtures/test_file.txt"
-	output := "_fixtures/test_file.pangu.txt"
-
-	fw, err := os.Create(output)
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer fw.Close()
-
-	err = pangu.FileSpacing(input, fw)
-	suite.Nil(err)
 }
 
 func (suite *PanguTestSuite) TestCJKRadicalsSupplement() {
@@ -354,6 +346,42 @@ func (suite *PanguTestSuite) TestSlash() {
 	suite.Equal(`陳上進 / Vinta`, pangu.TextSpacing(`陳上進/Vinta`))
 
 	suite.Equal(`得到一個 A / B 的結果`, pangu.TextSpacing(`得到一個A/B的結果`))
+}
+
+func (suite *PanguTestSuite) TestFileSpacing() {
+	input := "_fixtures/test_file.txt"
+	output := "_fixtures/test_file.pangu.txt"
+
+	fw, err := os.Create(output)
+	checkError(err)
+	defer fw.Close()
+
+	err = pangu.FileSpacing(input, fw)
+	suite.Nil(err)
+}
+
+func (suite *PanguTestSuite) TestFileSpacingNoNewlineAtEOF() {
+	input := "_fixtures/test_file_no_eof_newline.txt"
+	output := "_fixtures/test_file_no_eof_newline.pangu.txt"
+
+	fw, err := os.Create(output)
+	checkError(err)
+	defer fw.Close()
+
+	err = pangu.FileSpacing(input, fw)
+	suite.Nil(err)
+}
+
+func (suite *PanguTestSuite) TestFileSpacingNoSuchFile() {
+	input := "_fixtures/none.txt"
+	output := "_fixtures/none.pangu.txt"
+
+	fw, err := os.Create(output)
+	checkError(err)
+	defer fw.Close()
+
+	err = pangu.FileSpacing(input, fw)
+	suite.EqualError(err, "open _fixtures/none.txt: no such file or directory")
 }
 
 // In order for 'go test' to run this suite, we need to create
