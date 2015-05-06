@@ -132,15 +132,20 @@ func FileSpacing(filename string, w io.Writer) error {
 
 	br := bufio.NewReader(fr)
 	bw := bufio.NewWriter(w)
-	line, err := br.ReadString('\n')
-	for err == nil {
-		fmt.Fprint(bw, line)
-		line, err = br.ReadString('\n')
+
+	for {
+		line, err := br.ReadString('\n')
+		if err == nil {
+			fmt.Fprint(bw, TextSpacing(line))
+		} else {
+			if err == io.EOF {
+				fmt.Fprint(bw, TextSpacing(line))
+				break
+			}
+			return err
+		}
 	}
 	defer bw.Flush()
-	if err != io.EOF {
-		return err
-	}
 
 	return nil
 }
