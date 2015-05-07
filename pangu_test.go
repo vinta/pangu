@@ -1,9 +1,13 @@
 package pangu_test
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"github.com/stretchr/testify/suite"
 	"github.com/vinta/pangu"
+	"io"
+	"io/ioutil"
 	"os"
 	"testing"
 )
@@ -18,10 +22,21 @@ func checkError(err error) {
 	}
 }
 
-// func (suite *PanguTestSuite) assertEqualTextSpacing(expected, input string) {
-// 	actual := pangu.TextSpacing(input)
-// 	suite.Equal(expected, actual)
-// }
+func md5Of(filename string) string {
+	var result []byte
+
+	file, err := os.Open(filename)
+	checkError(err)
+	defer file.Close()
+
+	hash := md5.New()
+	_, err = io.Copy(hash, file)
+	checkError(err)
+
+	checksum := hex.EncodeToString(hash.Sum(result))
+
+	return checksum
+}
 
 func (suite *PanguTestSuite) TestTextSpacing() {
 	suite.Equal(`新八的構造成分有 95% 是眼鏡、3% 是水、2% 是垃圾`, pangu.TextSpacing(`新八的構造成分有95%是眼鏡、3%是水、2%是垃圾`))
@@ -358,6 +373,7 @@ func (suite *PanguTestSuite) TestFileSpacing() {
 
 	err = pangu.FileSpacing(input, fw)
 	suite.Nil(err)
+	suite.Equal(md5Of(output), md5Of("_fixtures/test_file.expected.txt"))
 }
 
 func (suite *PanguTestSuite) TestFileSpacingNoNewlineAtEOF() {
@@ -370,18 +386,14 @@ func (suite *PanguTestSuite) TestFileSpacingNoNewlineAtEOF() {
 
 	err = pangu.FileSpacing(input, fw)
 	suite.Nil(err)
+	suite.Equal(md5Of(output), md5Of("_fixtures/test_file_no_eof_newline.expected.txt"))
 }
 
 func (suite *PanguTestSuite) TestFileSpacingNoSuchFile() {
-	input := "_fixtures/none.txt"
-	output := "_fixtures/none.pangu.txt"
+	input := "_fixtures/none.exist"
 
-	fw, err := os.Create(output)
-	checkError(err)
-	defer fw.Close()
-
-	err = pangu.FileSpacing(input, fw)
-	suite.EqualError(err, "open _fixtures/none.txt: no such file or directory")
+	err := pangu.FileSpacing(input, ioutil.Discard)
+	suite.EqualError(err, "open _fixtures/none.exist: no such file or directory")
 }
 
 // In order for 'go test' to run this suite, we need to create
