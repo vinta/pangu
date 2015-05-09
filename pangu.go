@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"regexp"
 	"text/template"
 )
@@ -84,14 +85,12 @@ func re(exp string) string {
 	return expr
 }
 
-// TextSpacing performs a paranoid text spacing on input.
+// TextSpacing performs paranoid text spacing on text.
 // It returns the processed text, with love.
-func TextSpacing(input string) string {
-	if len(input) < 2 {
-		return input
+func TextSpacing(text string) string {
+	if len(text) < 2 {
+		return text
 	}
-
-	text := input
 
 	text = cjk_quote.ReplaceAllString(text, "$1 $2")
 	text = quote_cjk.ReplaceAllString(text, "$1 $2")
@@ -124,7 +123,12 @@ func TextSpacing(input string) string {
 // spacing on its contents and writes the processed content to w.
 // A successful call returns err == nil.
 func FileSpacing(filename string, w io.Writer) error {
-	fr, err := os.Open(filename)
+	absPath, err := filepath.Abs(filename)
+	if err != nil {
+		return err
+	}
+
+	fr, err := os.Open(absPath)
 	if err != nil {
 		return err
 	}
