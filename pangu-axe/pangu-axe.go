@@ -6,7 +6,6 @@ import (
 	"github.com/vinta/pangu"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 const (
@@ -16,6 +15,8 @@ const (
 	AUTHOR  = "Vinta Chen"
 	EMAIL   = "vinta.chen@gmail.com"
 )
+
+const PREFIX = "readable."
 
 func checkErrorExit(err error) {
 	if err != nil {
@@ -30,9 +31,7 @@ func outputFilename(path, specified string) string {
 	}
 
 	filename := filepath.Base(path)
-	ext := filepath.Ext(path)
-	suffix := ".pangu"
-	output := strings.Replace(filename, ext, suffix+ext, 1)
+	output := PREFIX + filename
 
 	return output
 }
@@ -47,13 +46,11 @@ func main() {
 	app.Commands = []cli.Command{
 		{
 			Name:    "text",
-			Usage:   "Spacing a text",
+			Usage:   "Performs paranoid text spacing on text",
 			Aliases: []string{"t"},
 			Action: func(c *cli.Context) {
 				if len(c.Args()) == 0 {
-					fmt.Println("USAGE:")
-					fmt.Println(`   pangu-axe text "your ugly text"`)
-
+					cli.ShowSubcommandHelp(c)
 					return
 				}
 
@@ -63,22 +60,18 @@ func main() {
 		},
 		{
 			Name:    "file",
-			Usage:   "Spacing a file or files",
+			Usage:   "Performs paranoid text spacing on files",
 			Aliases: []string{"f"},
 			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name:  "output, o",
 					Value: "",
-					Usage: `specify the output file name. If not specified, the output file name will be "your_filename.pangu.your_ext".`,
+					Usage: fmt.Sprintf(`Specifies the output file name. If not specified, the output file name will be "%sfilename.ext"`, PREFIX),
 				},
 			},
 			Action: func(c *cli.Context) {
 				if len(c.Args()) == 0 {
-					fmt.Println("USAGE:")
-					fmt.Println("   pangu-axe file your_file.txt")
-					fmt.Println("   pangu-axe file your_file.txt -o your_custom_output_filename")
-					fmt.Println("   pangu-axe file your_file.txt -o stdout")
-
+					cli.ShowSubcommandHelp(c)
 					return
 				}
 

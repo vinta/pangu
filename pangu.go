@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
 	"regexp"
 	"text/template"
 )
@@ -123,10 +122,10 @@ func TextSpacing(text string) string {
 // spacing on its contents and writes the processed content to w.
 // A successful call returns err == nil.
 func FileSpacing(filename string, w io.Writer) error {
-	filename, err := filepath.Abs(filename)
-	if err != nil {
-		return err
-	}
+	// filename, err := filepath.Abs(filename)
+	// if err != nil {
+	// 	return err
+	// }
 
 	fr, err := os.Open(filename)
 	if err != nil {
