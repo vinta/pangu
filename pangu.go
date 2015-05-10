@@ -42,12 +42,14 @@ const cjk = "" +
 // and Symbols (`~!@#$%^&*()-_=+[]{}\|;:'",<.>/?).
 //
 // The constant ans doesn't contain all symbols above.
-const ans = "A-Za-z0-9`~\\$%\\^&\\*\\-=\\+\\\\|/\u00a1-\u00ff\u2022\u2027\u2150-\u218f"
+const ans = "A-Za-z0-9`\\$%\\^&\\*\\-=\\+\\\\|/\u00a1-\u00ff\u2022\u2027\u2150-\u218f"
 
-var cjk_quote = regexp.MustCompile(re("([{{ .CJK }}])" + "([\"'])"))
-var quote_cjk = regexp.MustCompile(re("([\"'])" + "([{{ .CJK }}])"))
+var cjk_quote = regexp.MustCompile(re("([{{ .CJK }}])" + "([\"])"))
+var quote_cjk = regexp.MustCompile(re("([\"])" + "([{{ .CJK }}])"))
 var fix_quote = regexp.MustCompile(re("([\"'])" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\"'])"))
-var fix_single_quote = regexp.MustCompile(re("([{{ .CJK }}])" + "( )" + "(')" + "([A-Za-z])"))
+var cjk_single_quote_pair = regexp.MustCompile(re("([{{ .CJK }}])" + "([\"'])" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\"'])"))
+var single_quote_pair_cjk = regexp.MustCompile(re("([\"'])" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\"'])" + "([{{ .CJK }}])"))
+var fix_single_quote = regexp.MustCompile(re("([{{ .CJK }}])" + "( )" + "(')" + "([A-Za-z])")) // $1 $2$4$6 -- $1$3$5 $6
 
 var cjk_hash = regexp.MustCompile(re("([{{ .CJK }}])" + "(#(\\S+))"))
 var hash_cjk = regexp.MustCompile(re("((\\S+)#)" + "([{{ .CJK }}])"))
@@ -55,15 +57,15 @@ var hash_cjk = regexp.MustCompile(re("((\\S+)#)" + "([{{ .CJK }}])"))
 var cjk_operator_ans = regexp.MustCompile(re("([{{ .CJK }}])" + "([\\+\\-\\*/=&\\|<>])" + "([A-Za-z0-9])"))
 var ans_operator_cjk = regexp.MustCompile(re("([A-Za-z0-9])" + "([\\+\\-\\*/=&\\|<>])" + "([{{ .CJK }}])"))
 
-var cjk_bracket_cjk = regexp.MustCompile(re("([{{ .CJK }}])" + "([\\(\\[{<\u201c]+(.*?)[\\)\\]}>\u201d]+)" + "([{{ .CJK }}])"))
-var cjk_bracket = regexp.MustCompile(re("([{{ .CJK }}])" + "([\\(\\)\\[\\]{}<>\u201c\u201d])"))
-var bracket_cjk = regexp.MustCompile(re("([\\(\\)\\[\\]{}<>\u201c\u201d])" + "([{{ .CJK }}])"))
-var fix_bracket = regexp.MustCompile(re("([\\(\\[{<\u201c]+)" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\\)\\]}>\u201d]+)"))
+var cjk_bracket_cjk = regexp.MustCompile(re("([{{ .CJK }}])" + "([\\(\\[\\{<\u201c]+(.*?)[\\)\\]\\}>\u201d]+)" + "([{{ .CJK }}])"))
+var cjk_bracket = regexp.MustCompile(re("([{{ .CJK }}])" + "([\\(\\)\\[\\]\\{\\}<>\u201c\u201d])"))
+var bracket_cjk = regexp.MustCompile(re("([\\(\\)\\[\\]\\{\\}<>\u201c\u201d])" + "([{{ .CJK }}])"))
+var fix_bracket = regexp.MustCompile(re("([\\(\\[\\{<\u201c]+)" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\\)\\]\\}>\u201d]+)"))
 
-var fix_symbol = regexp.MustCompile(re("([{{ .CJK }}])" + "([!;:,\\.\\?])" + "([A-Za-z0-9])"))
+var fix_symbol = regexp.MustCompile(re("([{{ .CJK }}])" + "([~!;:,\\.\\?])" + "([A-Za-z0-9])"))
 
 var cjk_ans = regexp.MustCompile(re("([{{ .CJK }}])([{{ .ANS }}@])"))
-var ans_cjk = regexp.MustCompile(re("([{{ .ANS }}!;:,\\.\\?])([{{ .CJK }}])"))
+var ans_cjk = regexp.MustCompile(re("([{{ .ANS }}~!;:,\\.\\?])([{{ .CJK }}])"))
 
 type pattern struct {
 	CJK string
@@ -95,6 +97,8 @@ func TextSpacing(text string) string {
 	text = cjk_quote.ReplaceAllString(text, "$1 $2")
 	text = quote_cjk.ReplaceAllString(text, "$1 $2")
 	text = fix_quote.ReplaceAllString(text, "$1$3$5")
+	text = cjk_single_quote_pair.ReplaceAllString(text, "$1 $2$4$6")
+	text = single_quote_pair_cjk.ReplaceAllString(text, "$1$3$5 $6")
 	text = fix_single_quote.ReplaceAllString(text, "$1$3$4")
 
 	text = cjk_hash.ReplaceAllString(text, "$1 $2")
