@@ -1,8 +1,9 @@
 pangu.go
 ========
 
-[![Build Status](http://img.shields.io/travis/vinta/pangu.svg?style=flat-square)](https://travis-ci.org/vinta/pangu)
-[![Coverage Status](http://img.shields.io/coveralls/vinta/pangu.svg?style=flat-square)](https://coveralls.io/r/vinta/pangu)
+[![](https://img.shields.io/travis/vinta/pangu.svg?style=flat-square)](https://travis-ci.org/vinta/pangu)
+[![](https://img.shields.io/coveralls/vinta/pangu.svg?style=flat-square)](https://coveralls.io/r/vinta/pangu)
+[![](https://img.shields.io/badge/made%20with-%e2%9d%a4-ff69b4.svg?style=flat-square)](http://vinta.ws)
 
 Paranoid text spacing for good readability, to automatically insert whitespace between CJK (Chinese, Japanese, Korean) and half-width characters (alphabetical letters, numerical digits and symbols).
 
@@ -53,8 +54,9 @@ func main() {
 $ pangu-axe text "所以,請問Jackey的鼻子有幾個?3.14個"
 所以, 請問 Jackey 的鼻子有幾個? 3.14 個
 
-$ pangu-axe file your_file.txt
-your_file.pangu.txt
+$ pangu-axe file 銀河便車指南.txt
+$ pangu-axe file 宇宙盡頭的餐廳.txt -o 宇宙盡頭的餐廳（好讀版）.txt
+$ pangu-axe file 生命、宇宙及萬事萬物.txt 再見，謝謝你的魚.txt 基本無害.txt
 ```
 
 ## Documentation
