@@ -47,9 +47,9 @@ const ans = "A-Za-z0-9`\\$%\\^&\\*\\-=\\+\\\\|/\u00a1-\u00ff\u2022\u2027\u2150-\
 var cjk_quote = regexp.MustCompile(re("([{{ .CJK }}])" + "([\"])"))
 var quote_cjk = regexp.MustCompile(re("([\"])" + "([{{ .CJK }}])"))
 var fix_quote = regexp.MustCompile(re("([\"'])" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\"'])"))
-var cjk_single_quote_pair = regexp.MustCompile(re("([{{ .CJK }}])" + "([\"'])" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\"'])"))
-var single_quote_pair_cjk = regexp.MustCompile(re("([\"'])" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\"'])" + "([{{ .CJK }}])"))
-var fix_single_quote = regexp.MustCompile(re("([{{ .CJK }}])" + "( )" + "(')" + "([A-Za-z])")) // $1 $2$4$6 -- $1$3$5 $6
+var cjk_quote_pair = regexp.MustCompile(re("([{{ .CJK }}])" + "([\"'])" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\"'])"))
+var quote_pair_cjk = regexp.MustCompile(re("([\"'])" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\"'])" + "([{{ .CJK }}])"))
+var fix_single_quote = regexp.MustCompile(re("([{{ .CJK }}])" + "( )" + "(')" + "([A-Za-z])"))
 
 var cjk_hash = regexp.MustCompile(re("([{{ .CJK }}])" + "(#(\\S+))"))
 var hash_cjk = regexp.MustCompile(re("((\\S+)#)" + "([{{ .CJK }}])"))
@@ -97,8 +97,8 @@ func TextSpacing(text string) string {
 	text = cjk_quote.ReplaceAllString(text, "$1 $2")
 	text = quote_cjk.ReplaceAllString(text, "$1 $2")
 	text = fix_quote.ReplaceAllString(text, "$1$3$5")
-	text = cjk_single_quote_pair.ReplaceAllString(text, "$1 $2$4$6")
-	text = single_quote_pair_cjk.ReplaceAllString(text, "$1$3$5 $6")
+	text = cjk_quote_pair.ReplaceAllString(text, "$1 $2$4$6")
+	text = quote_pair_cjk.ReplaceAllString(text, "$1$3$5 $6")
 	text = fix_single_quote.ReplaceAllString(text, "$1$3$4")
 
 	text = cjk_hash.ReplaceAllString(text, "$1 $2")

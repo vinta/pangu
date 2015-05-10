@@ -295,14 +295,14 @@ func (suite *PanguTestSuite) TestBackslash() {
 
 func (suite *PanguTestSuite) TestColon() {
 	suite.Equal(`前面: 後面`, pangu.TextSpacing(`前面:後面`))
-
 	suite.Equal(`前面 : 後面`, pangu.TextSpacing(`前面 : 後面`))
+	suite.Equal(`前面: 後面`, pangu.TextSpacing(`前面: 後面`))
 }
 
 func (suite *PanguTestSuite) TestSemicolon() {
 	suite.Equal(`前面; 後面`, pangu.TextSpacing(`前面;後面`))
-
 	suite.Equal(`前面 ; 後面`, pangu.TextSpacing(`前面 ; 後面`))
+	suite.Equal(`前面; 後面`, pangu.TextSpacing(`前面; 後面`))
 }
 
 func (suite *PanguTestSuite) TestQuote() {
@@ -333,7 +333,7 @@ func (suite *PanguTestSuite) TestSingleQuote() {
 	suite.Equal(`head '中文 123 漢字' 後面`, pangu.TextSpacing(`head '中文123漢字'後面`))
 	suite.Equal(`head '中文 123 漢字' tail`, pangu.TextSpacing(`head '中文123漢字' tail`))
 
-	suite.Equal(`陳上進's 丸子`, pangu.TextSpacing(`陳上進's 丸子`))
+	suite.Equal(`陳上進 likes 林依諾's status.`, pangu.TextSpacing(`陳上進 likes 林依諾's status.`))
 }
 
 func (suite *PanguTestSuite) TestLessThan() {
@@ -357,6 +357,7 @@ func (suite *PanguTestSuite) TestLessThan() {
 func (suite *PanguTestSuite) TestComma() {
 	suite.Equal(`前面, 後面`, pangu.TextSpacing(`前面,後面`))
 	suite.Equal(`前面 , 後面`, pangu.TextSpacing(`前面 , 後面`))
+	suite.Equal(`前面, 後面`, pangu.TextSpacing(`前面, 後面`))
 }
 
 func (suite *PanguTestSuite) TestGreaterThan() {
@@ -373,11 +374,13 @@ func (suite *PanguTestSuite) TestGreaterThan() {
 func (suite *PanguTestSuite) TestPeriod() {
 	suite.Equal(`前面. 後面`, pangu.TextSpacing(`前面.後面`))
 	suite.Equal(`前面 . 後面`, pangu.TextSpacing(`前面 . 後面`))
+	suite.Equal(`前面. 後面`, pangu.TextSpacing(`前面. 後面`))
 }
 
 func (suite *PanguTestSuite) TestQuestionMark() {
 	suite.Equal(`前面? 後面`, pangu.TextSpacing(`前面?後面`))
 	suite.Equal(`前面 ? 後面`, pangu.TextSpacing(`前面 ? 後面`))
+	suite.Equal(`前面? 後面`, pangu.TextSpacing(`前面? 後面`))
 }
 
 func (suite *PanguTestSuite) TestSlash() {
@@ -388,10 +391,10 @@ func (suite *PanguTestSuite) TestSlash() {
 	suite.Equal(`Vinta / 陳上進`, pangu.TextSpacing(`Vinta/陳上進`))
 	suite.Equal(`陳上進 / Vinta`, pangu.TextSpacing(`陳上進/Vinta`))
 
+	suite.Equal(`得到一個 A/B 的結果`, pangu.TextSpacing(`得到一個A/B的結果`))
+
 	// TODO
 	// suite.Equal(`陳上進 / Vinta / Mollie`, pangu.TextSpacing(`陳上進/Vinta/Mollie`))
-
-	suite.Equal(`得到一個 A/B 的結果`, pangu.TextSpacing(`得到一個A/B的結果`))
 }
 
 func (suite *PanguTestSuite) TestFileSpacing() {
