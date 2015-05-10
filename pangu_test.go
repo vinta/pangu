@@ -46,6 +46,21 @@ func (suite *PanguTestSuite) TestTextSpacing() {
 	suite.Equal(`所以, 請問 Jackey 的鼻子有幾個? 3.14 個!`, pangu.TextSpacing(`所以, 請問 Jackey 的鼻子有幾個? 3.14 個!`))
 }
 
+func (suite *PanguTestSuite) TestLatin1Supplement() {
+	suite.Equal(`中文 Ø 漢字`, pangu.TextSpacing(`中文Ø漢字`))
+	suite.Equal(`中文 Ø 漢字`, pangu.TextSpacing(`中文 Ø 漢字`))
+}
+
+func (suite *PanguTestSuite) TestGeneralPunctuation() {
+	suite.Equal(`中文 • 漢字`, pangu.TextSpacing(`中文•漢字`))
+	suite.Equal(`中文 • 漢字`, pangu.TextSpacing(`中文 • 漢字`))
+}
+
+func (suite *PanguTestSuite) TestNumberForms() {
+	suite.Equal(`中文 Ⅶ 漢字`, pangu.TextSpacing(`中文Ⅶ漢字`))
+	suite.Equal(`中文 Ⅶ 漢字`, pangu.TextSpacing(`中文 Ⅶ 漢字`))
+}
+
 func (suite *PanguTestSuite) TestCJKRadicalsSupplement() {
 	suite.Equal(`abc ⻤ 123`, pangu.TextSpacing(`abc⻤123`))
 	suite.Equal(`abc ⻤ 123`, pangu.TextSpacing(`abc ⻤ 123`))
@@ -300,7 +315,8 @@ func (suite *PanguTestSuite) TestQuote() {
 	suite.Equal(`head "中文 123 漢字" 後面`, pangu.TextSpacing(`head "中文123漢字"後面`))
 	suite.Equal(`head "中文 123 漢字" tail`, pangu.TextSpacing(`head "中文123漢字" tail`))
 
-	suite.Equal(`head “中文 123 漢字” tail`, pangu.TextSpacing(`head “中文123漢字” tail`))
+	// \u201c and \u201d
+	suite.Equal(`前面 “中文 123 漢字” 後面`, pangu.TextSpacing(`前面“中文123漢字”後面`))
 }
 
 func (suite *PanguTestSuite) TestSingleQuote() {

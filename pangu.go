@@ -42,24 +42,23 @@ const cjk = "" +
 // and Symbols (`~!@#$%^&*()-_=+[]{}\|;:'",<.>/?).
 //
 // The constant ans doesn't contain all symbols above.
-const ans = "A-Za-z0-9`~\\$%\\^&\\*\\-=\\+\\\\|/"
+const ans = "A-Za-z0-9`~\\$%\\^&\\*\\-=\\+\\\\|/\u00a1-\u00ff\u2022\u2027\u2150-\u218f"
 
 var cjk_quote = regexp.MustCompile(re("([{{ .CJK }}])" + "([\"'])"))
 var quote_cjk = regexp.MustCompile(re("([\"'])" + "([{{ .CJK }}])"))
 var fix_quote = regexp.MustCompile(re("([\"'])" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\"'])"))
 var fix_single_quote = regexp.MustCompile(re("([{{ .CJK }}])" + "( )" + "(')" + "([A-Za-z])"))
 
+var cjk_hash = regexp.MustCompile(re("([{{ .CJK }}])" + "(#(\\S+))"))
+var hash_cjk = regexp.MustCompile(re("((\\S+)#)" + "([{{ .CJK }}])"))
+
+var cjk_operator_ans = regexp.MustCompile(re("([{{ .CJK }}])" + "([\\+\\-\\*/=&\\|<>])" + "([A-Za-z0-9])"))
+var ans_operator_cjk = regexp.MustCompile(re("([A-Za-z0-9])" + "([\\+\\-\\*/=&\\|<>])" + "([{{ .CJK }}])"))
+
 var cjk_bracket_cjk = regexp.MustCompile(re("([{{ .CJK }}])" + "([\\(\\[{<\u201c]+(.*?)[\\)\\]}>\u201d]+)" + "([{{ .CJK }}])"))
 var cjk_bracket = regexp.MustCompile(re("([{{ .CJK }}])" + "([\\(\\)\\[\\]{}<>\u201c\u201d])"))
 var bracket_cjk = regexp.MustCompile(re("([\\(\\)\\[\\]{}<>\u201c\u201d])" + "([{{ .CJK }}])"))
 var fix_bracket = regexp.MustCompile(re("([\\(\\[{<\u201c]+)" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\\)\\]}>\u201d]+)"))
-
-var cjk_hash = regexp.MustCompile(re("([{{ .CJK }}])" + "(#(\\S+))"))
-var hash_cjk = regexp.MustCompile(re("((\\S+)#)" + "([{{ .CJK }}])"))
-
-// var fix_operator = regexp.MustCompile(re("([A-Za-z0-9{{ .CJK }}])" + "([\\+\\-\\*/=&\\|<>])" + "([A-Za-z0-9{{ .CJK }}])"))
-var cjk_operator_ans = regexp.MustCompile(re("([{{ .CJK }}])" + "([\\+\\-\\*/=&\\|<>])" + "([A-Za-z0-9])"))
-var ans_operator_cjk = regexp.MustCompile(re("([A-Za-z0-9])" + "([\\+\\-\\*/=&\\|<>])" + "([{{ .CJK }}])"))
 
 var fix_symbol = regexp.MustCompile(re("([{{ .CJK }}])" + "([!;:,\\.\\?])" + "([A-Za-z0-9])"))
 
@@ -98,11 +97,11 @@ func TextSpacing(text string) string {
 	text = fix_quote.ReplaceAllString(text, "$1$3$5")
 	text = fix_single_quote.ReplaceAllString(text, "$1$3$4")
 
-	// text = fix_operator.ReplaceAllString(text, "$1 $2 $3")
+	text = cjk_hash.ReplaceAllString(text, "$1 $2")
+	text = hash_cjk.ReplaceAllString(text, "$1 $3")
+
 	text = cjk_operator_ans.ReplaceAllString(text, "$1 $2 $3")
 	text = ans_operator_cjk.ReplaceAllString(text, "$1 $2 $3")
-
-	text = fix_symbol.ReplaceAllString(text, "$1$2 $3")
 
 	oldText := text
 	newText := cjk_bracket_cjk.ReplaceAllString(oldText, "$1 $2 $4")
@@ -113,8 +112,7 @@ func TextSpacing(text string) string {
 	}
 	text = fix_bracket.ReplaceAllString(text, "$1$3$5")
 
-	text = cjk_hash.ReplaceAllString(text, "$1 $2")
-	text = hash_cjk.ReplaceAllString(text, "$1 $3")
+	text = fix_symbol.ReplaceAllString(text, "$1$2 $3")
 
 	text = cjk_ans.ReplaceAllString(text, "$1 $2")
 	text = ans_cjk.ReplaceAllString(text, "$1 $2")
