@@ -24,21 +24,15 @@ func checkErrorExit(err error) {
 	}
 }
 
-func outFilename(path, specified string) string {
+func outputFilename(path, specified string) string {
 	if len(specified) > 0 {
 		return specified
 	}
 
-	absPath, err := filepath.Abs(path)
-	checkErrorExit(err)
-
-	dir := filepath.Dir(absPath)
-	err = os.MkdirAll(dir, 0755)
-	checkErrorExit(err)
-
-	ext := filepath.Ext(absPath)
+	filename := filepath.Base(path)
+	ext := filepath.Ext(path)
 	suffix := ".pangu"
-	output := strings.Replace(absPath, ext, suffix+ext, 1)
+	output := strings.Replace(filename, ext, suffix+ext, 1)
 
 	return output
 }
@@ -58,7 +52,7 @@ func main() {
 			Action: func(c *cli.Context) {
 				if len(c.Args()) == 0 {
 					fmt.Println("USAGE:")
-					fmt.Println(`   pangu-axe text "your text"`)
+					fmt.Println(`   pangu-axe text "your ugly text"`)
 
 					return
 				}
@@ -75,7 +69,7 @@ func main() {
 				cli.StringFlag{
 					Name:  "output, o",
 					Value: "",
-					Usage: "output filename",
+					Usage: `specify the output file name. If not specified, the output file name will be "your_filename.pangu.your_ext".`,
 				},
 			},
 			Action: func(c *cli.Context) {
@@ -89,20 +83,25 @@ func main() {
 				}
 
 				filename := c.Args().First()
-
 				o := c.String("output")
-				output := outFilename(filename, o)
 
-				fw, err := os.Create(output)
-				checkErrorExit(err)
-				defer fw.Close()
+				var fw *os.File
+				var err error
+
+				switch o {
+				case "stdout", "STDOUT":
+					fw = os.Stdout
+				case "stderr", "STDERR":
+					fw = os.Stderr
+				default:
+					output := outputFilename(filename, o)
+					fw, err = os.Create(output)
+					checkErrorExit(err)
+					defer fw.Close()
+				}
 
 				err = pangu.FileSpacing(filename, fw)
-				if err != nil {
-					fmt.Println(err)
-					os.Exit(1)
-				}
-				fmt.Println(output)
+				checkErrorExit(err)
 			},
 		},
 	}
