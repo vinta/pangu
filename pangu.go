@@ -47,8 +47,8 @@ const ans = "A-Za-z0-9`\\$%\\^&\\*\\-=\\+\\\\|/\u00a1-\u00ff\u2022\u2027\u2150-\
 var cjk_quote = regexp.MustCompile(re("([{{ .CJK }}])" + "([\"])"))
 var quote_cjk = regexp.MustCompile(re("([\"])" + "([{{ .CJK }}])"))
 var fix_quote = regexp.MustCompile(re("([\"'])" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\"'])"))
-var cjk_quote_pair = regexp.MustCompile(re("([{{ .CJK }}])" + "([\"'])" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\"'])"))
-var quote_pair_cjk = regexp.MustCompile(re("([\"'])" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\"'])" + "([{{ .CJK }}])"))
+var cjk_quote_bracket_pair = regexp.MustCompile(re("([{{ .CJK }}])" + "([\"'\\(\\[\\{<\u201c])" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\"'\\)\\]\\}>\u201d])"))
+var quote_bracket_pair_cjk = regexp.MustCompile(re("([\"'\\(\\[\\{<\u201c])" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\"'\\)\\]\\}>\u201d])" + "([{{ .CJK }}])"))
 var fix_single_quote = regexp.MustCompile(re("([{{ .CJK }}])" + "( )" + "(')" + "([A-Za-z])"))
 
 var cjk_hash = regexp.MustCompile(re("([{{ .CJK }}])" + "(#(\\S+))"))
@@ -58,8 +58,8 @@ var cjk_operator_ans = regexp.MustCompile(re("([{{ .CJK }}])" + "([\\+\\-\\*/=&\
 var ans_operator_cjk = regexp.MustCompile(re("([A-Za-z0-9])" + "([\\+\\-\\*/=&\\|<>])" + "([{{ .CJK }}])"))
 
 var cjk_bracket_cjk = regexp.MustCompile(re("([{{ .CJK }}])" + "([\\(\\[\\{<\u201c]+(.*?)[\\)\\]\\}>\u201d]+)" + "([{{ .CJK }}])"))
-var cjk_bracket = regexp.MustCompile(re("([{{ .CJK }}])" + "([\\(\\)\\[\\]\\{\\}<>\u201c\u201d])"))
-var bracket_cjk = regexp.MustCompile(re("([\\(\\)\\[\\]\\{\\}<>\u201c\u201d])" + "([{{ .CJK }}])"))
+var cjk_bracket = regexp.MustCompile(re("([{{ .CJK }}])" + "([<>])"))
+var bracket_cjk = regexp.MustCompile(re("([<>])" + "([{{ .CJK }}])"))
 var fix_bracket = regexp.MustCompile(re("([\\(\\[\\{<\u201c]+)" + "(\\s*)" + "(.+?)" + "(\\s*)" + "([\\)\\]\\}>\u201d]+)"))
 
 var fix_symbol = regexp.MustCompile(re("([{{ .CJK }}])" + "([~!;:,\\.\\?])" + "([A-Za-z0-9])"))
@@ -97,8 +97,8 @@ func TextSpacing(text string) string {
 	text = cjk_quote.ReplaceAllString(text, "$1 $2")
 	text = quote_cjk.ReplaceAllString(text, "$1 $2")
 	text = fix_quote.ReplaceAllString(text, "$1$3$5")
-	text = cjk_quote_pair.ReplaceAllString(text, "$1 $2$4$6")
-	text = quote_pair_cjk.ReplaceAllString(text, "$1$3$5 $6")
+	text = cjk_quote_bracket_pair.ReplaceAllString(text, "$1 $2$4$6")
+	text = quote_bracket_pair_cjk.ReplaceAllString(text, "$1$3$5 $6")
 	text = fix_single_quote.ReplaceAllString(text, "$1$3$4")
 
 	text = cjk_hash.ReplaceAllString(text, "$1 $2")
