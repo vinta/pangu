@@ -22,8 +22,10 @@ _testmain.go
 *.exe
 *.test
 *.prof
-*.out
 
 .DS_Store
-
-*.pangu.txt
+*.out
+*.pangu
+*.pangu.*
+pangu.*
+readable.*
