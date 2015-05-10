@@ -156,22 +156,22 @@ func (suite *PanguTestSuite) TestAmpersand() {
 	suite.Equal(`前面 & 後面`, pangu.TextSpacing(`前面&後面`))
 	suite.Equal(`前面 & 後面`, pangu.TextSpacing(`前面 & 後面`))
 
-	suite.Equal(`Vinta & Mollie`, pangu.TextSpacing(`Vinta&Mollie`))
+	suite.Equal(`Vinta&Mollie`, pangu.TextSpacing(`Vinta&Mollie`))
 	suite.Equal(`Vinta & 陳上進`, pangu.TextSpacing(`Vinta&陳上進`))
 	suite.Equal(`陳上進 & Vinta`, pangu.TextSpacing(`陳上進&Vinta`))
 
-	suite.Equal(`得到一個 A & B 的結果`, pangu.TextSpacing(`得到一個A&B的結果`))
+	suite.Equal(`得到一個 A&B 的結果`, pangu.TextSpacing(`得到一個A&B的結果`))
 }
 
 func (suite *PanguTestSuite) TestAsterisk() {
 	suite.Equal(`前面 * 後面`, pangu.TextSpacing(`前面*後面`))
 	suite.Equal(`前面 * 後面`, pangu.TextSpacing(`前面 * 後面`))
 
-	suite.Equal(`Vinta * Mollie`, pangu.TextSpacing(`Vinta*Mollie`))
+	suite.Equal(`Vinta*Mollie`, pangu.TextSpacing(`Vinta*Mollie`))
 	suite.Equal(`Vinta * 陳上進`, pangu.TextSpacing(`Vinta*陳上進`))
 	suite.Equal(`陳上進 * Vinta`, pangu.TextSpacing(`陳上進*Vinta`))
 
-	suite.Equal(`得到一個 A * B 的結果`, pangu.TextSpacing(`得到一個A*B的結果`))
+	suite.Equal(`得到一個 A*B 的結果`, pangu.TextSpacing(`得到一個A*B的結果`))
 }
 
 func (suite *PanguTestSuite) TestParenthesis() {
@@ -193,11 +193,11 @@ func (suite *PanguTestSuite) TestMinus() {
 	suite.Equal(`前面 - 後面`, pangu.TextSpacing(`前面-後面`))
 	suite.Equal(`前面 - 後面`, pangu.TextSpacing(`前面 - 後面`))
 
-	suite.Equal(`Vinta - Mollie`, pangu.TextSpacing(`Vinta-Mollie`))
+	suite.Equal(`Vinta-Mollie`, pangu.TextSpacing(`Vinta-Mollie`))
 	suite.Equal(`Vinta - 陳上進`, pangu.TextSpacing(`Vinta-陳上進`))
 	suite.Equal(`陳上進 - Vinta`, pangu.TextSpacing(`陳上進-Vinta`))
 
-	suite.Equal(`得到一個 A - B 的結果`, pangu.TextSpacing(`得到一個A-B的結果`))
+	suite.Equal(`得到一個 A-B 的結果`, pangu.TextSpacing(`得到一個A-B的結果`))
 }
 
 func (suite *PanguTestSuite) TestUnderscore() {
@@ -212,7 +212,7 @@ func (suite *PanguTestSuite) TestPlus() {
 	suite.Equal(`Vinta + 陳上進`, pangu.TextSpacing(`Vinta+陳上進`))
 	suite.Equal(`陳上進 + Vinta`, pangu.TextSpacing(`陳上進+Vinta`))
 
-	suite.Equal(`得到一個 A + B 的結果`, pangu.TextSpacing(`得到一個A+B的結果`))
+	suite.Equal(`得到一個 A+B 的結果`, pangu.TextSpacing(`得到一個A+B的結果`))
 
 	suite.Equal(`得到一個 C++ 的結果`, pangu.TextSpacing(`得到一個C++的結果`))
 
@@ -224,11 +224,11 @@ func (suite *PanguTestSuite) TestEqual() {
 	suite.Equal(`前面 = 後面`, pangu.TextSpacing(`前面=後面`))
 	suite.Equal(`前面 = 後面`, pangu.TextSpacing(`前面 = 後面`))
 
-	suite.Equal(`Vinta = Mollie`, pangu.TextSpacing(`Vinta=Mollie`))
+	suite.Equal(`Vinta=Mollie`, pangu.TextSpacing(`Vinta=Mollie`))
 	suite.Equal(`Vinta = 陳上進`, pangu.TextSpacing(`Vinta=陳上進`))
 	suite.Equal(`陳上進 = Vinta`, pangu.TextSpacing(`陳上進=Vinta`))
 
-	suite.Equal(`得到一個 A = B 的結果`, pangu.TextSpacing(`得到一個A=B的結果`))
+	suite.Equal(`得到一個 A=B 的結果`, pangu.TextSpacing(`得到一個A=B的結果`))
 }
 
 func (suite *PanguTestSuite) TestBrace() {
@@ -265,11 +265,11 @@ func (suite *PanguTestSuite) TestPipe() {
 	suite.Equal(`前面 | 後面`, pangu.TextSpacing(`前面|後面`))
 	suite.Equal(`前面 | 後面`, pangu.TextSpacing(`前面 | 後面`))
 
-	suite.Equal(`Vinta | Mollie`, pangu.TextSpacing(`Vinta|Mollie`))
+	suite.Equal(`Vinta|Mollie`, pangu.TextSpacing(`Vinta|Mollie`))
 	suite.Equal(`Vinta | 陳上進`, pangu.TextSpacing(`Vinta|陳上進`))
 	suite.Equal(`陳上進 | Vinta`, pangu.TextSpacing(`陳上進|Vinta`))
 
-	suite.Equal(`得到一個 A | B 的結果`, pangu.TextSpacing(`得到一個A|B的結果`))
+	suite.Equal(`得到一個 A|B 的結果`, pangu.TextSpacing(`得到一個A|B的結果`))
 }
 
 func (suite *PanguTestSuite) TestBackslash() {
@@ -290,19 +290,30 @@ func (suite *PanguTestSuite) TestSemicolon() {
 
 func (suite *PanguTestSuite) TestQuote() {
 	suite.Equal(`前面 " 後面`, pangu.TextSpacing(`前面"後面`))
+	suite.Equal(`前面 "" 後面`, pangu.TextSpacing(`前面""後面`))
+	suite.Equal(`前面 " " 後面`, pangu.TextSpacing(`前面" "後面`))
 
 	suite.Equal(`前面 "中文 123 漢字" 後面`, pangu.TextSpacing(`前面"中文123漢字"後面`))
+	suite.Equal(`前面 "中文 123" 後面`, pangu.TextSpacing(`前面"中文123"後面`))
+	suite.Equal(`前面 "123 漢字" 後面`, pangu.TextSpacing(`前面"123漢字"後面`))
+	suite.Equal(`前面 "中文 123 漢字" tail`, pangu.TextSpacing(`前面"中文123漢字" tail`))
+	suite.Equal(`head "中文 123 漢字" 後面`, pangu.TextSpacing(`head "中文123漢字"後面`))
+	suite.Equal(`head "中文 123 漢字" tail`, pangu.TextSpacing(`head "中文123漢字" tail`))
 
-	suite.Equal(`前面 "" 後面`, pangu.TextSpacing(`前面""後面`))
+	suite.Equal(`head “中文 123 漢字” tail`, pangu.TextSpacing(`head “中文123漢字” tail`))
 }
 
 func (suite *PanguTestSuite) TestSingleQuote() {
 	suite.Equal(`前面 ' 後面`, pangu.TextSpacing(`前面'後面`))
-
-	suite.Equal(`前面 '中文 123 漢字' 後面`, pangu.TextSpacing(`前面'中文123漢字'後面`))
-
 	suite.Equal(`前面 '' 後面`, pangu.TextSpacing(`前面''後面`))
 	suite.Equal(`前面 ' ' 後面`, pangu.TextSpacing(`前面' '後面`))
+
+	suite.Equal(`前面 '中文 123 漢字' 後面`, pangu.TextSpacing(`前面'中文123漢字'後面`))
+	suite.Equal(`前面 '中文 123' 後面`, pangu.TextSpacing(`前面'中文123'後面`))
+	suite.Equal(`前面 '123 漢字' 後面`, pangu.TextSpacing(`前面'123漢字'後面`))
+	suite.Equal(`前面 '中文 123 漢字' tail`, pangu.TextSpacing(`前面'中文123漢字' tail`))
+	suite.Equal(`head '中文 123 漢字' 後面`, pangu.TextSpacing(`head '中文123漢字'後面`))
+	suite.Equal(`head '中文 123 漢字' tail`, pangu.TextSpacing(`head '中文123漢字' tail`))
 
 	suite.Equal(`陳上進's 丸子`, pangu.TextSpacing(`陳上進's 丸子`))
 }
@@ -311,19 +322,18 @@ func (suite *PanguTestSuite) TestLessThan() {
 	suite.Equal(`前面 < 後面`, pangu.TextSpacing(`前面<後面`))
 	suite.Equal(`前面 < 後面`, pangu.TextSpacing(`前面 < 後面`))
 
-	suite.Equal(`Vinta < Mollie`, pangu.TextSpacing(`Vinta<Mollie`))
+	suite.Equal(`Vinta<Mollie`, pangu.TextSpacing(`Vinta<Mollie`))
 	suite.Equal(`Vinta < 陳上進`, pangu.TextSpacing(`Vinta<陳上進`))
 	suite.Equal(`陳上進 < Vinta`, pangu.TextSpacing(`陳上進<Vinta`))
 
-	suite.Equal(`得到一個 A < B 的結果`, pangu.TextSpacing(`得到一個A<B的結果`))
+	suite.Equal(`得到一個 A<B 的結果`, pangu.TextSpacing(`得到一個A<B的結果`))
 
-	// TODO
-	// suite.Equal(`前面 <中文 123 漢字> 後面`, pangu.TextSpacing(`前面<中文123漢字>後面`))
-	// suite.Equal(`前面 <中文 123> 後面`, pangu.TextSpacing(`前面<中文123>後面`))
-	// suite.Equal(`前面 <123 漢字> 後面`, pangu.TextSpacing(`前面<123漢字>後面`))
-	// suite.Equal(`前面 <中文 123 漢字> tail`, pangu.TextSpacing(`前面<中文123漢字> tail`))
-	// suite.Equal(`head <中文 123 漢字> 後面`, pangu.TextSpacing(`head <中文123漢字>後面`))
-	// suite.Equal(`head <中文 123 漢字> tail`, pangu.TextSpacing(`head <中文123漢字> tail`))
+	suite.Equal(`前面 <中文 123 漢字> 後面`, pangu.TextSpacing(`前面<中文123漢字>後面`))
+	suite.Equal(`前面 <中文 123> 後面`, pangu.TextSpacing(`前面<中文123>後面`))
+	suite.Equal(`前面 <123 漢字> 後面`, pangu.TextSpacing(`前面<123漢字>後面`))
+	suite.Equal(`前面 <中文 123 漢字> tail`, pangu.TextSpacing(`前面<中文123漢字> tail`))
+	suite.Equal(`head <中文 123 漢字> 後面`, pangu.TextSpacing(`head <中文123漢字>後面`))
+	suite.Equal(`head <中文 123 漢字> tail`, pangu.TextSpacing(`head <中文123漢字> tail`))
 }
 
 func (suite *PanguTestSuite) TestComma() {
@@ -335,11 +345,11 @@ func (suite *PanguTestSuite) TestGreaterThan() {
 	suite.Equal(`前面 > 後面`, pangu.TextSpacing(`前面>後面`))
 	suite.Equal(`前面 > 後面`, pangu.TextSpacing(`前面 > 後面`))
 
-	suite.Equal(`Vinta > Mollie`, pangu.TextSpacing(`Vinta>Mollie`))
+	suite.Equal(`Vinta>Mollie`, pangu.TextSpacing(`Vinta>Mollie`))
 	suite.Equal(`Vinta > 陳上進`, pangu.TextSpacing(`Vinta>陳上進`))
 	suite.Equal(`陳上進 > Vinta`, pangu.TextSpacing(`陳上進>Vinta`))
 
-	suite.Equal(`得到一個 A > B 的結果`, pangu.TextSpacing(`得到一個A>B的結果`))
+	suite.Equal(`得到一個 A>B 的結果`, pangu.TextSpacing(`得到一個A>B的結果`))
 }
 
 func (suite *PanguTestSuite) TestPeriod() {
@@ -356,11 +366,14 @@ func (suite *PanguTestSuite) TestSlash() {
 	suite.Equal(`前面 / 後面`, pangu.TextSpacing(`前面/後面`))
 	suite.Equal(`前面 / 後面`, pangu.TextSpacing(`前面 / 後面`))
 
-	suite.Equal(`Vinta / Mollie`, pangu.TextSpacing(`Vinta/Mollie`))
+	suite.Equal(`Vinta/Mollie`, pangu.TextSpacing(`Vinta/Mollie`))
 	suite.Equal(`Vinta / 陳上進`, pangu.TextSpacing(`Vinta/陳上進`))
 	suite.Equal(`陳上進 / Vinta`, pangu.TextSpacing(`陳上進/Vinta`))
 
-	suite.Equal(`得到一個 A / B 的結果`, pangu.TextSpacing(`得到一個A/B的結果`))
+	// TODO
+	// suite.Equal(`陳上進 / Vinta / Mollie`, pangu.TextSpacing(`陳上進/Vinta/Mollie`))
+
+	suite.Equal(`得到一個 A/B 的結果`, pangu.TextSpacing(`得到一個A/B的結果`))
 }
 
 func (suite *PanguTestSuite) TestFileSpacing() {
