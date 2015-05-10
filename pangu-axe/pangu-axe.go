@@ -75,26 +75,37 @@ func main() {
 					return
 				}
 
-				filename := c.Args().First()
 				o := c.String("output")
 
-				var fw *os.File
-				var err error
-
-				switch o {
-				case "stdout", "STDOUT":
-					fw = os.Stdout
-				case "stderr", "STDERR":
-					fw = os.Stderr
-				default:
-					output := outputFilename(filename, o)
-					fw, err = os.Create(output)
-					checkErrorExit(err)
-					defer fw.Close()
+				if len(c.Args()) > 1 && len(o) > 0 {
+					fmt.Println(`can't use the "-output" flag with multiple files`)
+					os.Exit(1)
 				}
 
-				err = pangu.FileSpacing(filename, fw)
-				checkErrorExit(err)
+				for _, filename := range c.Args() {
+					if _, err := os.Stat(filename); os.IsNotExist(err) {
+						fmt.Printf("no such file or directory: %s\n", filename)
+						continue
+					}
+
+					var fw *os.File
+					var err error
+
+					switch o {
+					case "stdout", "STDOUT":
+						fw = os.Stdout
+					case "stderr", "STDERR":
+						fw = os.Stderr
+					default:
+						output := outputFilename(filename, o)
+						fw, err = os.Create(output)
+						checkErrorExit(err)
+						defer fw.Close()
+					}
+
+					err = pangu.FileSpacing(filename, fw)
+					checkErrorExit(err)
+				}
 			},
 		},
 	}
