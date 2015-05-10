@@ -125,9 +125,11 @@ func (suite *PanguTestSuite) TestExclamationMark() {
 }
 
 func (suite *PanguTestSuite) TestAt() {
+	// https://twitter.com/vinta
 	suite.Equal(`請 @vinta 吃大便`, pangu.TextSpacing(`請@vinta吃大便`))
 	suite.Equal(`請 @vinta 吃大便`, pangu.TextSpacing(`請 @vinta 吃大便`))
 
+	// http://weibo.com/vintalines
 	suite.Equal(`請 @陳上進 吃大便`, pangu.TextSpacing(`請@陳上進 吃大便`))
 	suite.Equal(`請 @陳上進 吃大便`, pangu.TextSpacing(`請 @陳上進 吃大便`))
 
@@ -137,11 +139,10 @@ func (suite *PanguTestSuite) TestAt() {
 
 func (suite *PanguTestSuite) TestHash() {
 	suite.Equal(`前面 #H2G2 後面`, pangu.TextSpacing(`前面#H2G2後面`))
-
 	suite.Equal(`前面 #銀河便車指南 後面`, pangu.TextSpacing(`前面#銀河便車指南 後面`))
+	suite.Equal(`前面 #銀河公車指南 #銀河拖吊車指南 後面`, pangu.TextSpacing(`前面#銀河公車指南 #銀河拖吊車指南 後面`))
 
-	suite.Equal(`前面 #銀河公車指南 #銀河大客車指南 後面`, pangu.TextSpacing(`前面#銀河公車指南 #銀河大客車指南 後面`))
-
+	suite.Equal(`前面 #H2G2# 後面`, pangu.TextSpacing(`前面#H2G2#後面`))
 	suite.Equal(`前面 #銀河閃電霹靂車指南# 後面`, pangu.TextSpacing(`前面#銀河閃電霹靂車指南#後面`))
 }
 
@@ -224,6 +225,7 @@ func (suite *PanguTestSuite) TestPlus() {
 	suite.Equal(`前面 + 後面`, pangu.TextSpacing(`前面+後面`))
 	suite.Equal(`前面 + 後面`, pangu.TextSpacing(`前面 + 後面`))
 
+	suite.Equal(`Vinta+Mollie`, pangu.TextSpacing(`Vinta+Mollie`))
 	suite.Equal(`Vinta + 陳上進`, pangu.TextSpacing(`Vinta+陳上進`))
 	suite.Equal(`陳上進 + Vinta`, pangu.TextSpacing(`陳上進+Vinta`))
 
