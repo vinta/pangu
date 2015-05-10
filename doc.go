@@ -4,7 +4,7 @@
 // (alphabetical letters, numerical digits and symbols).
 //
 // These whitespaces between Chinese and English characters are
-// called "Pangu's Space" by sinologist, since it separate the confusion
+// called "Pangu's Space" by sinologist, since it separates the chaos
 // between full-width and half-width characters. Studies showed that
 // who dislike to add whitespace between English and Chinese characters
 // also have relationship problem. Almost 70 percent of them will get
