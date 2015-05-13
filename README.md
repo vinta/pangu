@@ -16,7 +16,7 @@ Paranoid text spacing for good readability, to automatically insert whitespace b
 
 ## Installation
 
-To install the package for using in your Go programs:
+To install the package, `pangu`, for using in your Go programs:
 
 ``` bash
 $ go get -u github.com/vinta/pangu
