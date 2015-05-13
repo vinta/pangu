@@ -375,6 +375,10 @@ func (suite *PanguTestSuite) TestPeriod() {
 	suite.Equal(`前面. 後面`, pangu.TextSpacing(`前面.後面`))
 	suite.Equal(`前面 . 後面`, pangu.TextSpacing(`前面 . 後面`))
 	suite.Equal(`前面. 後面`, pangu.TextSpacing(`前面. 後面`))
+
+	// … is \u2026
+	suite.Equal(`前面… 後面`, pangu.TextSpacing(`前面…後面`))
+	suite.Equal(`前面…… 後面`, pangu.TextSpacing(`前面……後面`))
 }
 
 func (suite *PanguTestSuite) TestQuestionMark() {

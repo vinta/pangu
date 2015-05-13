@@ -42,7 +42,7 @@ const cjk = "" +
 // and Symbols (`~!@#$%^&*()-_=+[]{}\|;:'",<.>/?).
 //
 // The constant ans doesn't contain all symbols above.
-const ans = "A-Za-z0-9`\\$%\\^&\\*\\-=\\+\\\\|/\u00a1-\u00ff\u2022\u2026\u2027\u2150-\u218f"
+const ans = "A-Za-z0-9`\\$%\\^&\\*\\-=\\+\\\\|/\u00a1-\u00ff\u2022\u2027\u2150-\u218f"
 
 var cjk_quote = regexp.MustCompile(re("([{{ .CJK }}])" + "([\"'])"))
 var quote_cjk = regexp.MustCompile(re("([\"'])" + "([{{ .CJK }}])"))
@@ -63,7 +63,7 @@ var fix_bracket = regexp.MustCompile(re("([\\(\\[\\{<\u201c]+)" + "(\\s*)" + "(.
 var fix_symbol = regexp.MustCompile(re("([{{ .CJK }}])" + "([~!;:,\\.\\?\u2026])" + "([A-Za-z0-9])"))
 
 var cjk_ans = regexp.MustCompile(re("([{{ .CJK }}])([{{ .ANS }}@])"))
-var ans_cjk = regexp.MustCompile(re("([{{ .ANS }}~!;:,\\.\\?])([{{ .CJK }}])"))
+var ans_cjk = regexp.MustCompile(re("([{{ .ANS }}~!;:,\\.\\?\u2026])([{{ .CJK }}])"))
 
 type pattern struct {
 	CJK string
