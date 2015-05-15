@@ -82,29 +82,46 @@ func main() {
 					os.Exit(1)
 				}
 
+				errc := make(chan error)
 				for _, filename := range c.Args() {
 					if _, err := os.Stat(filename); os.IsNotExist(err) {
 						fmt.Printf("no such file or directory: %s\n", filename)
 						continue
 					}
 
-					var fw *os.File
-					var err error
+					go func(filename string) {
+						// fmt.Println("start:", filename)
 
-					switch o {
-					case "stdout", "STDOUT":
-						fw = os.Stdout
-					case "stderr", "STDERR":
-						fw = os.Stderr
-					default:
-						output := outputFilename(filename, o)
-						fw, err = os.Create(output)
-						checkErrorExit(err)
-						defer fw.Close()
+						var fw *os.File
+						var err error
+
+						switch o {
+						case "stdout", "STDOUT":
+							fw = os.Stdout
+						case "stderr", "STDERR":
+							fw = os.Stderr
+						default:
+							output := outputFilename(filename, o)
+							fw, err = os.Create(output)
+							if err != nil {
+								errc <- err
+								return
+							}
+							defer fw.Close()
+						}
+
+						err = pangu.FileSpacing(filename, fw)
+						errc <- err
+
+						// fmt.Println("end:", filename)
+					}(filename)
+				}
+
+				for _, _ = range c.Args() {
+					err := <-errc
+					if err != nil {
+						fmt.Println(err)
 					}
-
-					err = pangu.FileSpacing(filename, fw)
-					checkErrorExit(err)
 				}
 			},
 		},
