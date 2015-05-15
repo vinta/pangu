@@ -65,9 +65,9 @@ var fix_symbol = regexp.MustCompile(re("([{{ .CJK }}])" + "([~!;:,\\.\\?\u2026])
 var cjk_ans = regexp.MustCompile(re("([{{ .CJK }}])([{{ .ANS }}@])"))
 var ans_cjk = regexp.MustCompile(re("([{{ .ANS }}~!;:,\\.\\?\u2026])([{{ .CJK }}])"))
 
-type pattern struct {
-	CJK string
-	ANS string
+var context = map[string]string{
+	"CJK": cjk,
+	"ANS": ans,
 }
 
 func re(exp string) string {
@@ -75,11 +75,7 @@ func re(exp string) string {
 
 	var tmpl = template.New("pangu")
 	tmpl, _ = tmpl.Parse(exp)
-	pat := pattern{
-		CJK: cjk,
-		ANS: ans,
-	}
-	tmpl.Execute(&buf, pat)
+	tmpl.Execute(&buf, context)
 	expr := buf.String()
 
 	return expr
@@ -124,11 +120,6 @@ func TextSpacing(text string) string {
 // spacing on its contents and writes the processed content to w.
 // A successful call returns err == nil.
 func FileSpacing(filename string, w io.Writer) (err error) {
-	// filename, err := filepath.Abs(filename)
-	// if err != nil {
-	// 	return err
-	// }
-
 	fr, err := os.Open(filename)
 	if err != nil {
 		return err
