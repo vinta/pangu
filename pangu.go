@@ -123,7 +123,7 @@ func TextSpacing(text string) string {
 // FileSpacing reads the file named by filename, performs paranoid text
 // spacing on its contents and writes the processed content to w.
 // A successful call returns err == nil.
-func FileSpacing(filename string, w io.Writer) error {
+func FileSpacing(filename string, w io.Writer) (err error) {
 	// filename, err := filepath.Abs(filename)
 	// if err != nil {
 	// 	return err
