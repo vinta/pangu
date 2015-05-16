@@ -6,6 +6,7 @@ import (
 	"github.com/vinta/pangu"
 	"os"
 	"path/filepath"
+	"runtime"
 )
 
 const (
@@ -30,8 +31,6 @@ func genOutputFilename(path, specified string) string {
 }
 
 func processFile(errc chan error, filename, o string) {
-	fmt.Println("start:", filename)
-
 	var fw *os.File
 	var err error
 
@@ -58,8 +57,6 @@ func processFile(errc chan error, filename, o string) {
 
 	err = pangu.FileSpacing(filename, fw)
 	errc <- err
-
-	fmt.Println("end:", filename)
 }
 
 func main() {
@@ -108,7 +105,11 @@ func main() {
 					os.Exit(1)
 				}
 
+				// TODO: may be needless in future Go version
+				runtime.GOMAXPROCS(runtime.NumCPU())
+
 				errc := make(chan error)
+
 				for _, filename := range c.Args() {
 					go processFile(errc, filename, o)
 				}
