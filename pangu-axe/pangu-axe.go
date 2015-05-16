@@ -18,14 +18,7 @@ const (
 
 const PREFIX = "readable."
 
-func checkErrorExit(err error) {
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-}
-
-func outputFilename(path, specified string) string {
+func genOutputFilename(path, specified string) string {
 	if len(specified) > 0 {
 		return specified
 	}
@@ -34,6 +27,39 @@ func outputFilename(path, specified string) string {
 	output := PREFIX + filename
 
 	return output
+}
+
+func processFile(errc chan error, filename, o string) {
+	fmt.Println("start:", filename)
+
+	var fw *os.File
+	var err error
+
+	_, err = os.Stat(filename)
+	if err != nil {
+		errc <- err
+		return
+	}
+
+	switch o {
+	case "stdout", "STDOUT":
+		fw = os.Stdout
+	case "stderr", "STDERR":
+		fw = os.Stderr
+	default:
+		outputFilename := genOutputFilename(filename, o)
+		fw, err = os.Create(outputFilename)
+		if err != nil {
+			errc <- err
+			return
+		}
+		defer fw.Close()
+	}
+
+	err = pangu.FileSpacing(filename, fw)
+	errc <- err
+
+	fmt.Println("end:", filename)
 }
 
 func main() {
@@ -84,37 +110,7 @@ func main() {
 
 				errc := make(chan error)
 				for _, filename := range c.Args() {
-					if _, err := os.Stat(filename); os.IsNotExist(err) {
-						fmt.Printf("no such file or directory: %s\n", filename)
-						continue
-					}
-
-					go func(filename string) {
-						// fmt.Println("start:", filename)
-
-						var fw *os.File
-						var err error
-
-						switch o {
-						case "stdout", "STDOUT":
-							fw = os.Stdout
-						case "stderr", "STDERR":
-							fw = os.Stderr
-						default:
-							output := outputFilename(filename, o)
-							fw, err = os.Create(output)
-							if err != nil {
-								errc <- err
-								return
-							}
-							defer fw.Close()
-						}
-
-						err = pangu.FileSpacing(filename, fw)
-						errc <- err
-
-						// fmt.Println("end:", filename)
-					}(filename)
+					go processFile(errc, filename, o)
 				}
 
 				for _, _ = range c.Args() {
