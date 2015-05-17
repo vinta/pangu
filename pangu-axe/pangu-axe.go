@@ -17,6 +17,7 @@ const (
 	EMAIL   = "vinta.chen@gmail.com"
 )
 
+// TODO: a command flag to allow user to set custom prefix
 var PREFIX = "readable."
 
 func prefixFilename(path, specified string) string {
