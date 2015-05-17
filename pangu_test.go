@@ -46,10 +46,13 @@ func md5Of(filename string) string {
 
 func (suite *PanguTestSuite) TestTextSpacing() {
 	suite.Equal(`新八的構造成分有 95% 是眼鏡、3% 是水、2% 是垃圾`, pangu.TextSpacing(`新八的構造成分有95%是眼鏡、3%是水、2%是垃圾`))
-	suite.Equal(`新八的構造成分有 95% 是眼鏡、3% 是水、2% 是垃圾`, pangu.TextSpacing(`新八的構造成分有 95% 是眼鏡、3% 是水、2% 是垃圾`))
-
 	suite.Equal(`所以, 請問 Jackey 的鼻子有幾個? 3.14 個!`, pangu.TextSpacing(`所以,請問Jackey的鼻子有幾個?3.14個!`))
-	suite.Equal(`所以, 請問 Jackey 的鼻子有幾個? 3.14 個!`, pangu.TextSpacing(`所以, 請問 Jackey 的鼻子有幾個? 3.14 個!`))
+	suite.Equal(`JUST WE 就是 JUST WE，既不偉大也不卑微！`, pangu.TextSpacing(`JUST WE就是JUST WE，既不偉大也不卑微！`))
+	suite.Equal(`搭載 MP3 播放器，連續播放時數最長達到 124 小時的超強利刃…… 菊一文字 RX-7!`, pangu.TextSpacing(`搭載MP3播放器，連續播放時數最長達到124小時的超強利刃……菊一文字RX-7!`))
+}
+
+func (suite *PanguTestSuite) TestTextSpacingTooShort() {
+	suite.Equal(`V`, pangu.TextSpacing(`V`))
 }
 
 func (suite *PanguTestSuite) TestLatin1Supplement() {
