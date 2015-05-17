@@ -12,7 +12,7 @@ import (
 const (
 	NAME    = "pangu-axe"
 	USAGE   = "Paranoid text spacing"
-	VERSION = "1.2.0"
+	VERSION = "2.5.6"
 	AUTHOR  = "Vinta Chen"
 	EMAIL   = "vinta.chen@gmail.com"
 )

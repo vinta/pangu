@@ -10,7 +10,7 @@ import (
 	"text/template"
 )
 
-const VERSION = "1.2.0"
+const VERSION = "2.5.6"
 
 // CJK is short for Chinese, Japanese and Korean.
 //
