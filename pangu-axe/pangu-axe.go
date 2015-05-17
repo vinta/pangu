@@ -17,17 +17,17 @@ const (
 	EMAIL   = "vinta.chen@gmail.com"
 )
 
-const PREFIX = "readable."
+var PREFIX = "readable."
 
-func genOutputFilename(path, specified string) string {
+func prefixFilename(path, specified string) string {
 	if len(specified) > 0 {
 		return specified
 	}
 
 	filename := filepath.Base(path)
-	output := PREFIX + filename
+	newFilename := PREFIX + filename
 
-	return output
+	return newFilename
 }
 
 func processFile(errc chan error, filename, o string) {
@@ -46,8 +46,8 @@ func processFile(errc chan error, filename, o string) {
 	case "stderr", "STDERR":
 		fw = os.Stderr
 	default:
-		outputFilename := genOutputFilename(filename, o)
-		fw, err = os.Create(outputFilename)
+		newFilename := prefixFilename(filename, o)
+		fw, err = os.Create(newFilename)
 		if err != nil {
 			errc <- err
 			return

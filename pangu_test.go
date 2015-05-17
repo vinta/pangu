@@ -16,6 +16,12 @@ type PanguTestSuite struct {
 	suite.Suite
 }
 
+// In order for 'go test' to run this suite, we need to create
+// a normal test function and pass our suite to suite.Run
+func TestPanguTestSuite(t *testing.T) {
+	suite.Run(t, new(PanguTestSuite))
+}
+
 func checkError(err error) {
 	if err != nil {
 		fmt.Println(err)
@@ -432,10 +438,4 @@ func (suite *PanguTestSuite) TestFileSpacingNoSuchFile() {
 
 	err := pangu.FileSpacing(input, ioutil.Discard)
 	suite.EqualError(err, "open _fixtures/none.exist: no such file or directory")
-}
-
-// In order for 'go test' to run this suite, we need to create
-// a normal test function and pass our suite to suite.Run
-func TestPanguTestSuite(t *testing.T) {
-	suite.Run(t, new(PanguTestSuite))
 }
