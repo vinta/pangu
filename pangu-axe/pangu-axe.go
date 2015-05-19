@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/codegangsta/cli"
+	"github.com/fatih/color"
 	"github.com/vinta/pangu"
 	"os"
 	"path/filepath"
@@ -102,7 +103,7 @@ func main() {
 				o := c.String("output")
 
 				if len(c.Args()) > 1 && len(o) > 0 {
-					fmt.Println(`can't use the "-output" flag with multiple files`)
+					color.Red(`can't use the "-output" flag with multiple files`)
 					os.Exit(1)
 				}
 
@@ -118,7 +119,7 @@ func main() {
 				for _, _ = range c.Args() {
 					err := <-errc
 					if err != nil {
-						fmt.Println(err)
+						color.Red("%s", err)
 					}
 				}
 			},
