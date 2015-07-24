@@ -2,7 +2,7 @@ pangu.go
 ========
 
 [![](https://img.shields.io/travis/vinta/pangu.svg?style=flat-square)](https://travis-ci.org/vinta/pangu)
-[![](https://img.shields.io/coveralls/vinta/pangu.svg?style=flat-square)](https://coveralls.io/r/vinta/pangu)
+[![](https://img.shields.io/codecov/c/github/vinta/pangu/master.svg?style=flat-square)](https://codecov.io/github/vinta/pangu)
 [![](https://img.shields.io/badge/made%20with-%e2%9d%a4-ff69b4.svg?style=flat-square)](http://vinta.ws)
 
 Paranoid text spacing for good readability, to automatically insert whitespace between CJK (Chinese, Japanese, Korean) and half-width characters (alphabetical letters, numerical digits and symbols).
