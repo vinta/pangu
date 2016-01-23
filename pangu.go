@@ -10,6 +10,7 @@ import (
 	"text/template"
 )
 
+// VERSION is the version number of pangu
 const VERSION = "2.5.6"
 
 // CJK is short for Chinese, Japanese and Korean.
