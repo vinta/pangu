@@ -10,8 +10,7 @@ import (
 	"text/template"
 )
 
-// VERSION is the version number of pangu
-const VERSION = "2.5.6"
+const VERSION = "3.0.0"
 
 // CJK is short for Chinese, Japanese and Korean.
 //
@@ -82,9 +81,9 @@ func re(exp string) string {
 	return expr
 }
 
-// TextSpacing performs paranoid text spacing on text.
+// SpacingText performs paranoid text spacing on text.
 // It returns the processed text, with love.
-func TextSpacing(text string) string {
+func SpacingText(text string) string {
 	if len(text) < 2 {
 		return text
 	}
@@ -117,10 +116,10 @@ func TextSpacing(text string) string {
 	return text
 }
 
-// FileSpacing reads the file named by filename, performs paranoid text
+// SpacingFile reads the file named by filename, performs paranoid text
 // spacing on its contents and writes the processed content to w.
 // A successful call returns err == nil.
-func FileSpacing(filename string, w io.Writer) (err error) {
+func SpacingFile(filename string, w io.Writer) (err error) {
 	fr, err := os.Open(filename)
 	if err != nil {
 		return err
@@ -133,10 +132,10 @@ func FileSpacing(filename string, w io.Writer) (err error) {
 	for {
 		line, err := br.ReadString('\n')
 		if err == nil {
-			fmt.Fprint(bw, TextSpacing(line))
+			fmt.Fprint(bw, SpacingText(line))
 		} else {
 			if err == io.EOF {
-				fmt.Fprint(bw, TextSpacing(line))
+				fmt.Fprint(bw, SpacingText(line))
 				break
 			}
 			return err

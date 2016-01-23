@@ -41,7 +41,7 @@ import (
 )
 
 func main() {
-    s := pangu.TextSpacing("新八的構造成分有95%是眼鏡、3%是水、2%是垃圾")
+    s := pangu.SpacingText("新八的構造成分有95%是眼鏡、3%是水、2%是垃圾")
     fmt.Println(s)
     // Output:
     // 新八的構造成分有 95% 是眼鏡、3% 是水、2% 是垃圾

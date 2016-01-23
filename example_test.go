@@ -6,14 +6,14 @@ import (
 	"os"
 )
 
-func ExampleTextSpacing() {
-	s := pangu.TextSpacing("所以,請問Jackey的鼻子有幾個?3.14個!")
+func ExampleSpacingText() {
+	s := pangu.SpacingText("所以,請問Jackey的鼻子有幾個?3.14個!")
 	fmt.Println(s)
 	// Output:
 	// 所以, 請問 Jackey 的鼻子有幾個? 3.14 個!
 }
 
-func ExampleFileSpacing() {
+func ExampleSpacingFile() {
 	input := "_fixtures/test_file.txt"
 	output := "_fixtures/test_file.pangu.txt"
 
@@ -23,5 +23,5 @@ func ExampleFileSpacing() {
 	}
 	defer fw.Close()
 
-	pangu.FileSpacing(input, fw)
+	pangu.SpacingFile(input, fw)
 }

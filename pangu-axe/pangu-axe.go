@@ -7,7 +7,6 @@ import (
 	"github.com/vinta/pangu"
 	"os"
 	"path/filepath"
-	"runtime"
 )
 
 const (
@@ -18,7 +17,8 @@ const (
 	EMAIL   = "vinta.chen@gmail.com"
 )
 
-// TODO: a command flag to allow user to set custom prefix
+// PREFIX is prefix of outpu filename
+// TODO
 var PREFIX = "readable."
 
 func prefixFilename(path, specified string) string {
@@ -57,7 +57,7 @@ func processFile(errc chan error, filename, o string) {
 		defer fw.Close()
 	}
 
-	err = pangu.FileSpacing(filename, fw)
+	err = pangu.SpacingFile(filename, fw)
 	errc <- err
 }
 
@@ -80,7 +80,7 @@ func main() {
 				}
 
 				text := c.Args().First()
-				fmt.Println(pangu.TextSpacing(text))
+				fmt.Println(pangu.SpacingText(text))
 			},
 		},
 		{
@@ -107,16 +107,13 @@ func main() {
 					os.Exit(1)
 				}
 
-				// TODO: may be needless in future Go version
-				runtime.GOMAXPROCS(runtime.NumCPU())
-
 				errc := make(chan error)
 
 				for _, filename := range c.Args() {
 					go processFile(errc, filename, o)
 				}
 
-				for _, _ = range c.Args() {
+				for _ = range c.Args() {
 					err := <-errc
 					if err != nil {
 						color.Red("%s", err)

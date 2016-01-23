@@ -5,14 +5,14 @@ import (
 	"testing"
 )
 
-func BenchmarkTextSpacing(b *testing.B) {
+func BenchmarkSpacingText(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		pangu.TextSpacing("所以,請問Jackey的鼻子有幾個?3.14個!")
+		pangu.SpacingText("所以,請問Jackey的鼻子有幾個?3.14個!")
 	}
 }
 
-func BenchmarkFileSpacing(b *testing.B) {
+func BenchmarkSpacingFile(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		ExampleFileSpacing()
+		ExampleSpacingFile()
 	}
 }
