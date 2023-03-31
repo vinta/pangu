@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/codegangsta/cli"
-	"github.com/fatih/color"
-	"github.com/vinta/pangu"
 	"os"
 	"path/filepath"
+
+	"github.com/fatih/color"
+	"github.com/urfave/cli"
+
+	"github.com/vinta/pangu"
 )
 
 const (
