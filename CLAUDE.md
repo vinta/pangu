@@ -17,7 +17,7 @@ go fix ./...                                        # Apply modernize fixes
 
 - Spacing engine and package API: `*.go` in the repo root (`package pangu`)
 - CLI: `cmd/pangu/`
-- Parity spec, ported 1:1 from pangu.js `tests/shared/`: `*_test.go` in the repo root (text fixtures in `testdata/`)
+- Parity spec, ported 1:1 from pangu.js `tests/shared/`: `symbol_test.go` and `text_test.go`, one `TestXxx` per pangu.js test file (`TestSymbolPeriod` is `symbol-period.test.ts`); helpers and API tests in `pangu_test.go` (text fixtures in `testdata/`)
 - Domain language and algorithm semantics: `../pangu.js/CONTEXT.md`; decision records: `../pangu.js/docs/adr/`
 
 ## Gotchas
@@ -27,7 +27,7 @@ go fix ./...                                        # Apply modernize fixes
 - Go's `regexp` is RE2: no lookahead, lookbehind, or backreferences. Port a lookaround by capturing the context and writing it back, or by a check in code. A capture consumes what a lookaround only peeked at, so matches sharing a character stop overlapping: `([CJK])([A])([CJK])` turns `中a中b中` into `中 a 中b中`. Test the shared-character case for every translated rule.
 - Go's `\s` is ASCII `[\t\n\f\r ]`; js's also matches `\v`, NBSP, `　`, and ` `. Spell out the js set when porting `\s` or `[^\s...]`.
 - js string lengths and offsets count UTF-16 code units; Go's count UTF-8 bytes. Port `text.length`, `slice()`, and callback offsets rune-aware, not with `len()`.
-- Commented-out cases, FIXME comments, and `t.Skip` in tests are intentional 1:1 ports of upstream FIXME cases and `it.todo`/`describe.todo`: leave them.
+- Commented-out cases, FIXME comments, and `testSpaceTextFails` groups in tests are intentional 1:1 ports of upstream FIXME cases and `it.fails`: leave them. `testSpaceTextFails` fails once every case in its group passes; then move the group to `testSpaceText`.
 - Standard library only. A module, `tool` directive included, lands in every importer's module graph, so adding one needs the user's approval. Keep the `go` directive at 1.26, and check the go.mod diff after `go get`.
 - Write code comments in English with ASCII characters only. Never paste CJK sample text into a comment; describe the shape generically (`CJK | CJK`, `A+CJK`) and use `\uXXXX` escape notation when a specific character matters.
 
