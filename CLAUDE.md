@@ -16,7 +16,7 @@ go fix ./...                                        # Apply modernize fixes
 ## Where Things Live
 
 - Spacing engine and package API: `*.go` in the repo root (`package pangu`)
-- CLI: `internal/cli/`, run by `cmd/pangu/`, with `pangu.js` `tests/node/` ported to `cli_test.go` (text fixtures in `internal/cli/testdata/`). Deviations from the js CLI: parsed by `flag`, so usage errors exit 2 and text starting with `-` needs `--` first; stdin from `/dev/null` counts as a terminal, because the standard library has no isatty
+- CLI: `internal/cli/`, run by `cmd/pangu/` and its alias `cmd/pangu-go/`, with `pangu.js` `tests/node/` ported to `cli_test.go` (text fixtures in `internal/cli/testdata/`). Deviations from the js CLI: parsed by `flag`, so usage errors exit 2 and text starting with `-` needs `--` first; stdin from `/dev/null` counts as a terminal, because the standard library has no isatty
 - Parity spec, ported 1:1 from pangu.js `tests/shared/`: `symbol_test.go` and `text_test.go`, one `TestXxx` per pangu.js test file (`TestSymbolPeriod` is `symbol-period.test.ts`); helpers and API tests in `pangu_test.go`
 - Domain language and algorithm semantics: `../pangu.js/CONTEXT.md`; decision records: `../pangu.js/docs/adr/`
 
