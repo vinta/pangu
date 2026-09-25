@@ -54,6 +54,19 @@ func TestSpaceTextIdempotent(t *testing.T) {
 	}
 }
 
+// Synthetic regex-boundary cases, expected outputs from pangu.js: two matches of one lookaround rule share a character, which a port that captures the lookaround would skip
+func TestSpaceTextSharedCharacter(t *testing.T) {
+	testSpaceText(t, []spaceTextCase{
+		{"中!中!中", "中! 中! 中"},
+		{"中~中~a", "中~ 中~ a"},
+		{"中.中.中", "中. 中. 中"},
+		{"a|中|b", "a | 中 | b"},
+		{"中+中+中", "中 + 中 + 中"},
+		{"中·中·中", "中・中・中"},
+		{"中a中b中", "中 a 中 b 中"},
+	})
+}
+
 func TestHasProperSpacing(t *testing.T) {
 	for text, want := range map[string]bool{
 		"♫ 每條大街小巷，每個工程師的嘴裡，見面第一句話，就是不要在過年前 Deploy ♫": true,
