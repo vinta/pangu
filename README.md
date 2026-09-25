@@ -1,62 +1,79 @@
-pangu.go
-========
+# pangu.go
 
-Paranoid text spacing for good readability, to automatically insert whitespace between CJK (Chinese, Japanese, Korean) and half-width characters (alphabetical letters, numerical digits and symbols).
+[![Go Reference](https://img.shields.io/badge/go.dev-reference-007d9c?style=for-the-badge&logo=go&logoColor=white)](https://pkg.go.dev/github.com/vinta/pangu/v4)
+[![Go Version](https://img.shields.io/github/go-mod/go-version/vinta/pangu?style=for-the-badge)](https://github.com/vinta/pangu/blob/main/go.mod)
 
-- [pangu.go](https://github.com/vinta/pangu) (Go)
-- [pangu.java](https://github.com/vinta/pangu.java) (Java)
-- [pangu.js](https://github.com/vinta/pangu.js) (JavaScript)
-- [pangu.py](https://github.com/vinta/pangu.py) (Python)
-- [pangu.space](https://github.com/vinta/pangu.space) (Web API)
+Opinionated paranoid text spacing in Go: automatically inserts whitespace between CJK (Chinese, Japanese, Korean) and ANS (alphabetical letters, numerical digits and symbols).
+
+- [pangu.js](https://github.com/vinta/pangu.js)
+- [pangu.py](https://github.com/vinta/pangu.py)
+- [pangu.go](https://github.com/vinta/pangu)
+- [pangu.java](https://github.com/vinta/pangu.java)
+- [pangu.space](https://github.com/vinta/pangu.space) (HTTP API)
 
 ## Installation
 
-To install the package, `pangu`, for using in your Go programs:
+```bash
+# as a library
+$ go get github.com/vinta/pangu/v4
 
-```console
-$ go get -u github.com/vinta/pangu
-```
-
-To install the command-line tool, `pangu-axe`:
-
-```console
-$ go get -u github.com/vinta/pangu/pangu-axe
+# as a CLI, installs both `pangu` and `pangu-go`
+$ go install github.com/vinta/pangu/v4/cmd/...@latest
 ```
 
 ## Usage
 
-### Package
+### In Go
 
 ```go
 package main
 
 import (
-    "fmt"
-    "github.com/vinta/pangu"
+	"fmt"
+
+	"github.com/vinta/pangu/v4"
 )
 
 func main() {
-    s := pangu.SpacingText("當你凝視著bug，bug也凝視著你")
-    fmt.Println(s)
-    // Output:
-    // 當你凝視著 bug，bug 也凝視著你
+	fmt.Println(pangu.SpaceText("你從什麼時候開始產生了我沒使用Monkey Patch的錯覺?"))
+	// 你從什麼時候開始產生了我沒使用 Monkey Patch 的錯覺?
+
+	fmt.Println(pangu.HasProperSpacing("聽說 Hadoop 工程師睡不著的時候都會 Map/Reduce 羊"))
+	// true
 }
 ```
 
-### Command-line Interface
+### In CLI
 
-```console
-$ pangu-axe text "與PM戰鬥的人，應當小心自己不要成為PM"
-與 PM 戰鬥的人，應當小心自己不要成為 PM
+```bash
+$ pangu-go "為了讓公司的開發流程正常化，有人提議要導入DevOps，但是因為有部分工程師反對，主管決定讓大家投票表決，有三個選項1.導入2.不導入3.維持現狀"
+為了讓公司的開發流程正常化，有人提議要導入 DevOps，但是因為有部分工程師反對，主管決定讓大家投票表決，有三個選項 1. 導入 2. 不導入 3. 維持現狀
 
-$ pangu-axe file 銀河便車指南.txt
-$ pangu-axe file 宇宙盡頭的餐廳.txt -o 宇宙盡頭的餐廳（好讀版）.txt
-$ pangu-axe file 生命、宇宙及萬事萬物.txt 再見，謝謝你的魚.txt 基本無害.txt
+$ pangu-go -t "為什麼小明有問題都不Google？因為他有Bing"
+為什麼小明有問題都不 Google？因為他有 Bing
+
+$ pangu-go -f path/to/file.txt
+未來的某一天，Gmail 配備的 AI 可能會得出一個結論：想要消滅垃圾郵件最好的辦法就是消滅人類
+
+$ pangu-go -c "心裡想的是Microservice，手裡做的是Distributed Monolith"; echo $?
+Corrected: 心裡想的是 Microservice，手裡做的是 Distributed Monolith
+1
+
+$ echo "Workaround雖可恥但有用" | pangu-go
+Workaround 雖可恥但有用
+
+$ go run github.com/vinta/pangu/v4/cmd/pangu@latest "聽說桐島rm -rf /*了"
+聽說桐島 rm -rf /* 了
 ```
 
-## Documentation
+`pangu` and `pangu-go` are the same command. Use `pangu-go` when pangu.js or pangu.py also installs a `pangu` on your `PATH`.
 
-- `pangu` on [GoDoc](https://godoc.org/github.com/vinta/pangu)
-- `pangu-axe` on [GoDoc](https://godoc.org/github.com/vinta/pangu/pangu-axe)
+## License
 
-Have a question? Ask it on the [GitHub issues](https://github.com/vinta/pangu/issues)!
+Released under the [MIT License](https://opensource.org/licenses/MIT).
+
+## Author
+
+- GitHub: [@vinta](https://github.com/vinta)
+- Twitter: [@vinta](https://twitter.com/vinta)
+- Website: [vinta.ws](https://vinta.ws/code/)
