@@ -10,7 +10,7 @@ import (
 	"runtime/debug"
 	"strings"
 
-	"github.com/vinta/pangu"
+	"github.com/vinta/pangu/v4"
 )
 
 const usage = `usage: pangu [-h] [-v] [-t | -f | -c] [text_or_path]

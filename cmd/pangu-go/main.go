@@ -4,7 +4,7 @@ package main
 import (
 	"os"
 
-	"github.com/vinta/pangu/internal/cli"
+	"github.com/vinta/pangu/v4/internal/cli"
 )
 
 func main() {

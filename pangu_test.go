@@ -3,7 +3,7 @@ package pangu_test
 import (
 	"testing"
 
-	"github.com/vinta/pangu"
+	"github.com/vinta/pangu/v4"
 )
 
 type spaceTextCase struct {
