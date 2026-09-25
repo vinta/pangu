@@ -79,3 +79,10 @@ func TestHasProperSpacing(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkSpaceText(b *testing.B) {
+	text := "聽說Hadoop工程師睡不著的時候都會MapReduce羊，前面.後面(test)後面「Let's Party!」價格$100元，使用Python.py檔案#TIL"
+	for b.Loop() {
+		pangu.SpaceText(text)
+	}
+}

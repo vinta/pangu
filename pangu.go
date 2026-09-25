@@ -53,135 +53,175 @@ func SpaceText(text string) string {
 		})
 	}
 
-	// Middle dots go before the spacing rules, which would space a tight one as ANS
-	text = replaceLookaround(middleDot, text, func(s string, m []int) bool {
-		return !runeBeforeIs(s, m[0], isMiddleDotGap) && !runeAfterIs(s, m[1], isMiddleDotGap)
-	}, literal("\u30fb"))
+	if strings.ContainsAny(text, "\u00b7\u2022\u2027") {
+		// Middle dots go before the spacing rules, which would space a tight one as ANS
+		text = replaceLookaround(middleDot, text, func(s string, m []int) bool {
+			return !runeBeforeIs(s, m[0], isMiddleDotGap) && !runeAfterIs(s, m[1], isMiddleDotGap)
+		}, literal("\u30fb"))
+	}
 
-	// Dot runs go first, before the single-period rule
-	text = dotsCJK.ReplaceAllString(text, "${1} ${2}")
+	if strings.ContainsAny(text, ".\u2026") {
+		// Dot runs go first, before the single-period rule
+		text = dotsCJK.ReplaceAllString(text, "${1} ${2}")
+	}
 
-	text = replaceLookaround(cjkPunctuation, text, nextIs(isCJKOrAlnum), expand(cjkPunctuation, "${1}${2} "))
-	text = replaceLookaround(punctuationCJK, text, nextIs(isCJK), expand(punctuationCJK, "${0} "))
-	text = replaceLookaround(cjkTilde, text, nextIs(isCJKOrAlnum), expand(cjkTilde, "${1}${2} "))
-	text = cjkTildeEquals.ReplaceAllString(text, "${1} ${2} ")
-	text = replaceLookaround(cjkPeriod, text, nextIs(isCJK), expand(cjkPeriod, "${1}${2} "))
-	text = anPeriodCJK.ReplaceAllString(text, "${1}${2} ${3}")
-	text = anColonCJK.ReplaceAllString(text, "${1}${2} ${3}")
-	text = fixCJKColonANS.ReplaceAllString(text, "${1}\uff1a${2}")
+	if strings.ContainsAny(text, "!;,?:") {
+		text = replaceLookaround(cjkPunctuation, text, nextIs(isCJKOrAlnum), expand(cjkPunctuation, "${1}${2} "))
+		text = replaceLookaround(punctuationCJK, text, nextIs(isCJK), expand(punctuationCJK, "${0} "))
+	}
+	if strings.Contains(text, "~") {
+		text = replaceLookaround(cjkTilde, text, nextIs(isCJKOrAlnum), expand(cjkTilde, "${1}${2} "))
+		text = cjkTildeEquals.ReplaceAllString(text, "${1} ${2} ")
+	}
+	if strings.Contains(text, ".") {
+		text = replaceLookaround(cjkPeriod, text, nextIs(isCJK), expand(cjkPeriod, "${1}${2} "))
+		text = anPeriodCJK.ReplaceAllString(text, "${1}${2} ${3}")
+	}
+	if strings.Contains(text, ":") {
+		text = anColonCJK.ReplaceAllString(text, "${1}${2} ${3}")
+		text = fixCJKColonANS.ReplaceAllString(text, "${1}\uff1a${2}")
+	}
 
-	text = cjkQuote.ReplaceAllString(text, "${1} ${2}")
-	text = quoteCJK.ReplaceAllString(text, "${1} ${2}")
-	text = fixQuoteAnyQuote.ReplaceAllString(text, "${1}${2}${3}")
+	if strings.ContainsAny(text, "`\"\u05f4\u201d") {
+		text = cjkQuote.ReplaceAllString(text, "${1} ${2}")
+		text = quoteCJK.ReplaceAllString(text, "${1} ${2}")
+		text = fixQuoteAnyQuote.ReplaceAllString(text, "${1}${2}${3}")
 
-	text = quoteAN.ReplaceAllString(text, "${1} ${2}")
-	text = cjkQuoteAN.ReplaceAllString(text, "${1}${2} ${3}")
+		text = quoteAN.ReplaceAllString(text, "${1} ${2}")
+		text = cjkQuoteAN.ReplaceAllString(text, "${1}${2} ${3}")
+	}
 
-	text = fixPossessiveSingleQuote.ReplaceAllString(text, "${1}'s")
+	if strings.Contains(text, "'") {
+		text = fixPossessiveSingleQuote.ReplaceAllString(text, "${1}'s")
 
-	// Quoted pure-CJK content keeps its quotes tight, so hide it before the single-quote rules run
-	singleQuotes := &placeholders{placeholderKind: singleQuotePlaceholder}
-	text = singleQuotePureCJK.ReplaceAllStringFunc(text, singleQuotes.store)
-	text = cjkSingleQuoteButPossessive.ReplaceAllString(text, "${1} ${2}")
-	text = singleQuoteCJK.ReplaceAllString(text, "${1} ${2}")
-	text = singleQuotes.restore(text)
+		// Quoted pure-CJK content keeps its quotes tight, so hide it before the single-quote rules run
+		singleQuotes := &placeholders{placeholderKind: singleQuotePlaceholder}
+		text = singleQuotePureCJK.ReplaceAllStringFunc(text, singleQuotes.store)
+		text = cjkSingleQuoteButPossessive.ReplaceAllString(text, "${1} ${2}")
+		text = singleQuoteCJK.ReplaceAllString(text, "${1} ${2}")
+		text = singleQuotes.restore(text)
+	}
 
-	text = hashCJKHash.ReplaceAllString(text, "${1} ${2}${3}${4} ${5}")
-	text = cjkHash.ReplaceAllString(text, "${1} ${2}")
-	text = hashCJK.ReplaceAllString(text, "${1} ${2}")
+	if strings.Contains(text, "#") {
+		text = hashCJKHash.ReplaceAllString(text, "${1} ${2}${3}${4} ${5}")
+		text = cjkHash.ReplaceAllString(text, "${1} ${2}")
+		text = hashCJK.ReplaceAllString(text, "${1} ${2}")
+	}
 
 	// Protect compound words from operator spacing
 	compoundWords := &placeholders{placeholderKind: compoundWordPlaceholder}
-	text = compoundWord.ReplaceAllStringFunc(text, compoundWords.store)
+	if strings.Contains(text, "-") {
+		text = compoundWord.ReplaceAllStringFunc(text, compoundWords.store)
+	}
 
-	// Single-letter grades run before the operator rules so A+CJK becomes A+ CJK, not A + CJK
-	text = singleLetterGradeCJK.ReplaceAllString(text, "${1}${2} ${3}")
+	if strings.ContainsAny(text, "+-*") {
+		// Single-letter grades run before the operator rules so A+CJK becomes A+ CJK, not A + CJK
+		text = singleLetterGradeCJK.ReplaceAllString(text, "${1}${2} ${3}")
 
-	// Affixes run before the operator rules so the symbol stays attached to its half-width side
-	text = cjkSignDigit.ReplaceAllString(text, "${1} ${2}${3}")
-	text = cjkHyphenFlag.ReplaceAllString(text, "${1} ${2}${3}")
-	text = digitPlusCJK.ReplaceAllString(text, "${1}${2} ${3}")
+		// Affixes run before the operator rules so the symbol stays attached to its half-width side
+		text = cjkSignDigit.ReplaceAllString(text, "${1} ${2}${3}")
+		text = cjkHyphenFlag.ReplaceAllString(text, "${1} ${2}${3}")
+		text = digitPlusCJK.ReplaceAllString(text, "${1}${2} ${3}")
+	}
 
-	// Plus reading is per line: a plus in direct contact with CJK makes every undecided plus on the line a separator. A decided plus keeps its reading: space-adjacent,
-	// affix-attached (100+, +886), or in a ++ run (C++). It runs before the operator rules, so a CJK+A contact flips the line's joiners like CJK+CJK does
-	text = mapLines(text, func(line string) string {
-		if plusCJKContact.MatchString(line) {
-			line = replaceLookaround(plus, line, func(s string, m []int) bool {
-				return runeBeforeIs(s, m[0], not(isPlusNeighbor)) && runeAfterIs(s, m[1], not(isPlusNeighbor))
-			}, func(s string, m []int) string {
-				// Read through compound placeholders to recognize names such as non-Disney+
-				if !endsWithNameSuffix(compoundWords.restore(s[:m[1]])) {
-					return " + "
-				}
-				if runeAfterIs(s, m[1], isClosingAfterSuffix) {
-					return "+"
-				}
-				return "+ "
-			})
-		}
-		// A closing bracket cannot carry a name suffix, so before a full-width opener the separator space goes on the closing-bracket side only
-		return replaceLookaround(plus, line, func(s string, m []int) bool {
-			return runeBeforeIs(s, m[0], isRightBracket) && runeAfterIs(s, m[1], isFullWidthLeft)
-		}, literal(" +"))
-	})
+	if strings.Contains(text, "+") {
+		// Plus reading is per line: a plus in direct contact with CJK makes every undecided plus on the line a separator. A decided plus keeps its reading: space-adjacent,
+		// affix-attached (100+, +886), or in a ++ run (C++). It runs before the operator rules, so a CJK+A contact flips the line's joiners like CJK+CJK does
+		text = mapLines(text, func(line string) string {
+			if plusCJKContact.MatchString(line) {
+				line = replaceLookaround(plus, line, func(s string, m []int) bool {
+					return runeBeforeIs(s, m[0], not(isPlusNeighbor)) && runeAfterIs(s, m[1], not(isPlusNeighbor))
+				}, func(s string, m []int) string {
+					// Read through compound placeholders to recognize names such as non-Disney+
+					if !endsWithNameSuffix(compoundWords.restore(s[:m[1]])) {
+						return " + "
+					}
+					if runeAfterIs(s, m[1], isClosingAfterSuffix) {
+						return "+"
+					}
+					return "+ "
+				})
+			}
+			// A closing bracket cannot carry a name suffix, so before a full-width opener the separator space goes on the closing-bracket side only
+			return replaceLookaround(plus, line, func(s string, m []int) bool {
+				return runeBeforeIs(s, m[0], isRightBracket) && runeAfterIs(s, m[1], isFullWidthLeft)
+			}, literal(" +"))
+		})
+	}
 
-	// Hyphen reading is per line and runs before the operator rules space the CJK contact away. Only a hyphen between a closing and an opening bracket flips
-	text = mapLines(text, func(line string) string {
-		if !hyphenCJKContact.MatchString(line) {
-			return line
-		}
-		return replaceLookaround(hyphen, line, func(s string, m []int) bool {
-			return runeBeforeIs(s, m[0], isRightBracket) && runeAfterIs(s, m[1], isLeftBracket)
-		}, literal(" - "))
-	})
+	if strings.Contains(text, "-") {
+		// Hyphen reading is per line and runs before the operator rules space the CJK contact away. Only a hyphen between a closing and an opening bracket flips
+		text = mapLines(text, func(line string) string {
+			if !hyphenCJKContact.MatchString(line) {
+				return line
+			}
+			return replaceLookaround(hyphen, line, func(s string, m []int) bool {
+				return runeBeforeIs(s, m[0], isRightBracket) && runeAfterIs(s, m[1], isLeftBracket)
+			}, literal(" - "))
+		})
+	}
 
-	// An asterisk before a square bracket opens a bracket glob (*[0-9].log), so it stays tight. See ADR 0033
-	text = replaceLookaround(cjkOperatorANS, text, func(s string, m []int) bool {
-		return s[m[4]:m[5]] != "*" || s[m[6]:m[7]] != "["
-	}, expand(cjkOperatorANS, "${1} ${2} ${3}"))
-	// Listed name suffixes keep their signs attached
-	text = replaceLookaround(ansOperatorCJK, text, func(s string, m []int) bool {
-		return !endsWithNameSuffix(s[:m[5]])
-	}, expand(ansOperatorCJK, "${1} ${2} ${3}"))
+	if strings.ContainsAny(text, "*=&-") {
+		// An asterisk before a square bracket opens a bracket glob (*[0-9].log), so it stays tight. See ADR 0033
+		text = replaceLookaround(cjkOperatorANS, text, func(s string, m []int) bool {
+			return s[m[4]:m[5]] != "*" || s[m[6]:m[7]] != "["
+		}, expand(cjkOperatorANS, "${1} ${2} ${3}"))
+		// Listed name suffixes keep their signs attached
+		text = replaceLookaround(ansOperatorCJK, text, func(s string, m []int) bool {
+			return !endsWithNameSuffix(s[:m[5]])
+		}, expand(ansOperatorCJK, "${1} ${2} ${3}"))
+	}
 
-	text = cjkLessThan.ReplaceAllString(text, "${1} ${2} ${3}")
-	text = lessThanCJK.ReplaceAllString(text, "${1} ${2} ${3}")
-	text = cjkGreaterThan.ReplaceAllString(text, "${1} ${2} ${3}")
-	text = greaterThanCJK.ReplaceAllString(text, "${1} ${2} ${3}")
+	if strings.ContainsAny(text, "<>") {
+		text = cjkLessThan.ReplaceAllString(text, "${1} ${2} ${3}")
+		text = lessThanCJK.ReplaceAllString(text, "${1} ${2} ${3}")
+		text = cjkGreaterThan.ReplaceAllString(text, "${1} ${2} ${3}")
+		text = greaterThanCJK.ReplaceAllString(text, "${1} ${2} ${3}")
+	}
 
-	text = cjkUnixAbsolutePath.ReplaceAllString(text, "${1} ${2}")
-	text = cjkUnixRelativePath.ReplaceAllString(text, "${1} ${2}")
-	text = cjkWindowsPath.ReplaceAllString(text, "${1} ${2}")
-	text = unixAbsolutePathSlashCJK.ReplaceAllString(text, "${1} ${2}")
-	text = unixRelativePathSlashCJK.ReplaceAllString(text, "${1} ${2}")
+	if strings.ContainsAny(text, "/\\") {
+		text = cjkUnixAbsolutePath.ReplaceAllString(text, "${1} ${2}")
+		text = cjkUnixRelativePath.ReplaceAllString(text, "${1} ${2}")
+		text = cjkWindowsPath.ReplaceAllString(text, "${1} ${2}")
+		text = unixAbsolutePathSlashCJK.ReplaceAllString(text, "${1} ${2}")
+		text = unixRelativePathSlashCJK.ReplaceAllString(text, "${1} ${2}")
+	}
 
-	// Pipe reading is per line: a pipe in direct CJK contact makes every pipe on the line a separator (CJK | CJK, as in concatenated page titles)
-	text = mapLines(text, func(line string) string {
-		if !pipeCJKContact.MatchString(line) {
-			return line
-		}
-		return replaceLookaround(pipeSeparator, line, nextIs(not(isSpaceOrPipe)), expand(pipeSeparator, "${1} ${2} "))
-	})
+	if strings.Contains(text, "|") {
+		// Pipe reading is per line: a pipe in direct CJK contact makes every pipe on the line a separator (CJK | CJK, as in concatenated page titles)
+		text = mapLines(text, func(line string) string {
+			if !pipeCJKContact.MatchString(line) {
+				return line
+			}
+			return replaceLookaround(pipeSeparator, line, nextIs(not(isSpaceOrPipe)), expand(pipeSeparator, "${1} ${2} "))
+		})
+	}
 
-	// A pipe or plus separator space can land just inside a closing quote; strip it again so a second pass changes nothing
-	text = fixQuoteAnyQuote.ReplaceAllString(text, "${1}${2}${3}")
+	if strings.ContainsAny(text, "`\"\u05f4") {
+		// A pipe or plus separator space can land just inside a closing quote; strip it again so a second pass changes nothing
+		text = fixQuoteAnyQuote.ReplaceAllString(text, "${1}${2}${3}")
+	}
 
 	text = compoundWords.restore(text)
 
-	text = cjkLeftBracket.ReplaceAllString(text, "${1} ${2}")
-	text = rightBracketCJK.ReplaceAllString(text, "${1} ${2}")
-	text = ansCJKLeftQuoteAnyRightQuote.ReplaceAllString(text, "${1} ${2}${3}${4}")
-	text = leftQuoteAnyRightQuoteANSCJK.ReplaceAllString(text, "${1}${2}${3} ${4}")
-	// A right quote opens a pair only when no unclosed left quote precedes it on the line
-	text = replaceLookaround(ansCJKRightQuoteAnyRightQuote, text, func(s string, m []int) bool {
-		return !hasUnclosedLeftQuote(s[:m[4]])
-	}, expand(ansCJKRightQuoteAnyRightQuote, "${1} ${2}${3}${4}"))
+	if strings.ContainsAny(text, "([{<>)]}\u201c\u201d") {
+		text = cjkLeftBracket.ReplaceAllString(text, "${1} ${2}")
+		text = rightBracketCJK.ReplaceAllString(text, "${1} ${2}")
+		text = ansCJKLeftQuoteAnyRightQuote.ReplaceAllString(text, "${1} ${2}${3}${4}")
+		text = leftQuoteAnyRightQuoteANSCJK.ReplaceAllString(text, "${1}${2}${3} ${4}")
+		// A right quote opens a pair only when no unclosed left quote precedes it on the line
+		text = replaceLookaround(ansCJKRightQuoteAnyRightQuote, text, func(s string, m []int) bool {
+			return !hasUnclosedLeftQuote(s[:m[4]])
+		}, expand(ansCJKRightQuoteAnyRightQuote, "${1} ${2}${3}${4}"))
+	}
 
-	// A dotted name keeps its call parenthesis tight (Math.floor(x)), a bare name does not (foo (x))
-	text = replaceLookaround(anLeftBracket, text, func(s string, m []int) bool {
-		return !isDottedName(s[:m[3]])
-	}, expand(anLeftBracket, "${1} ${2}"))
-	text = rightBracketAN.ReplaceAllString(text, "${1} ${2}")
+	if strings.ContainsAny(text, "([{)]}") {
+		// A dotted name keeps its call parenthesis tight (Math.floor(x)), a bare name does not (foo (x))
+		text = replaceLookaround(anLeftBracket, text, func(s string, m []int) bool {
+			return !isDottedName(s[:m[3]])
+		}, expand(anLeftBracket, "${1} ${2}"))
+		text = rightBracketAN.ReplaceAllString(text, "${1} ${2}")
+	}
 
 	text = replaceLookaround(cjkANS, text, func(s string, m []int) bool {
 		r, _ := utf8.DecodeRuneInString(s[m[4]:])
@@ -189,8 +229,10 @@ func SpaceText(text string) string {
 	}, expand(cjkANS, "${1} ${2}"))
 	text = ansCJK.ReplaceAllString(text, "${1} ${2}")
 
-	text = percentAlpha.ReplaceAllString(text, "${1} ${2}")
-	text = copyrightDigit.ReplaceAllString(text, "${1} ${2}")
+	if strings.ContainsAny(text, "%\u00a9") {
+		text = percentAlpha.ReplaceAllString(text, "${1} ${2}")
+		text = copyrightDigit.ReplaceAllString(text, "${1} ${2}")
+	}
 
 	text = fixBracketSpacing(text)
 
@@ -201,8 +243,10 @@ func SpaceText(text string) string {
 		text = htmlTags.restore(text)
 	}
 
-	text = cjkHTTPURL.ReplaceAllString(text, "${1} ${2}")
-	text = urls.restore(text)
+	if len(urls.items) > 0 {
+		text = cjkHTTPURL.ReplaceAllString(text, "${1} ${2}")
+		text = urls.restore(text)
+	}
 	return backticks.restore(text)
 }
 
