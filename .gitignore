@@ -1,0 +1,9 @@
+# Binaries
+*.exe
+*.test
+
+# Test and profiling output
+*.out
+*.prof
+
+.DS_Store
