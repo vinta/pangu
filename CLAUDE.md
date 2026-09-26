@@ -22,7 +22,7 @@ go fix ./...                                        # Apply modernize fixes
 
 ## Gotchas
 
-- Spacing rule changes flow downstream from pangu.js: fix or tweak rules upstream first, then port. Read `CONTEXT.md` before touching the engine.
+- Spacing rule changes flow downstream from pangu.js: fix or tweak rules upstream first, then port. Read `CONTEXT.md` before touching the engine. Ported through pangu.js `8cd3a97d`: list pending upstream changes with `git -C ../pangu.js log 8cd3a97d.. -- src/shared src/node tests/shared tests/node`, and bump the hash after each sync.
 - Engine internals are idiomatic Go, not js-shaped; output parity is locked by the 1:1 ported test suite. Port each pangu.js `expect(...)` as one table case, run as a `t.Run` subtest named by its input.
 - Go's `regexp` is RE2: no lookahead, lookbehind, or backreferences. Port a lookaround as the `accept` check of `replaceLookaround`, which retries a rejected match one character later the way js scans. A capture would consume what the lookaround only peeked at, so matches sharing a character stop overlapping: `([CJK])([A])([CJK])` turns `中a中b中` into `中 a 中b中`. Capture and write back only a Private Use Area placeholder marker, which never starts another match. Add each new lookaround rule's shared-character case to `TestSpaceTextSharedCharacter`.
 - Go's `\s` is ASCII `[\t\n\f\r ]`; js's also matches `\v`, NBSP, `\u3000`, and `\u2028` (`jsSpace` in `rules.go`). Use `jsSpace` when porting `\s` or `[^\s...]`.
