@@ -23,7 +23,7 @@ $ go install github.com/vinta/pangu/v4/cmd/...@latest
 
 ## Usage
 
-### In Go
+### Go Library
 
 ```go
 package main
@@ -43,7 +43,7 @@ func main() {
 }
 ```
 
-### In CLI
+### CLI
 
 ```bash
 $ pangu-go "為了讓公司的開發流程正常化，有人提議要導入DevOps，但是因為有部分工程師反對，主管決定讓大家投票表決，有三個選項1.導入2.不導入3.維持現狀"
