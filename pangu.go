@@ -260,9 +260,9 @@ func trimHTTPURL(url string) string {
 	unbalanced := strings.Count(url, ")") - strings.Count(url, "(")
 	for {
 		trimmed := httpURLTrailingPunctuation.ReplaceAllString(url, "")
-		if strings.HasSuffix(trimmed, ")") && unbalanced > 0 {
+		if rest, ok := strings.CutSuffix(trimmed, ")"); ok && unbalanced > 0 {
 			unbalanced--
-			url = trimmed[:len(trimmed)-1]
+			url = rest
 			continue
 		}
 		if trimmed == url {
