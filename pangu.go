@@ -284,7 +284,7 @@ func fixBracketSpacing(text string) string {
 
 // hasUnclosedLeftQuote reports whether a left curly quote opens on the current line of text and is not closed yet
 func hasUnclosedLeftQuote(text string) bool {
-	for i := strings.LastIndexAny(text, "\u201c\u201d\n"); i >= 0; {
+	if i := strings.LastIndexAny(text, "\u201c\u201d\n"); i >= 0 {
 		return strings.HasPrefix(text[i:], "\u201c")
 	}
 	return false
