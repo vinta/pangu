@@ -1,7 +1,7 @@
 # pangu.go
 
 [![Go Reference](https://img.shields.io/badge/go.dev-reference-007d9c?style=for-the-badge&logo=go&logoColor=white)](https://pkg.go.dev/github.com/vinta/pangu/v4)
-[![Go Version](https://img.shields.io/github/go-mod/go-version/vinta/pangu?style=for-the-badge)](https://github.com/vinta/pangu/blob/main/go.mod)
+[![Go Version](https://img.shields.io/github/go-mod/go-version/vinta/pangu?style=for-the-badge)](https://github.com/vinta/pangu/blob/master/go.mod)
 
 Opinionated paranoid text spacing in Go: automatically inserts whitespace between CJK (Chinese, Japanese, Korean) and ANS (alphabetical letters, numerical digits and symbols).
 
